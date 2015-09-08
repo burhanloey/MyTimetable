@@ -1,0 +1,13 @@
+table {
+    width: 100%;
+}
+
+th, td {
+    text-align: left;
+}
+
+#drop {
+    background: lightblue;
+    text-align: center;
+    padding: 1em;
+}

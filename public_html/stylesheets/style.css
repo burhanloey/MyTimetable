@@ -6,8 +6,15 @@ th, td {
     text-align: left;
 }
 
+#preview {
+    background: lightgreen;
+    text-align: center;
+    padding: 1em;
+}
+
 #drop {
     background: lightblue;
     text-align: center;
     padding: 1em;
+    margin-top: 5px;
 }

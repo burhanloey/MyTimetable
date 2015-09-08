@@ -42,6 +42,12 @@ function handleDragover(e) {
 }
 
 function processWorkbook(workbook) {
+    var cellAddress = 'B1';
+    var firstSheet = workbook.SheetNames[0];
+    var worksheet = workbook.Sheets[firstSheet];
+    var cell = worksheet[cellAddress];
+    document.getElementById('preview').innerHTML = cellAddress + ': ' + cell.v;
+    
     var output = JSON.stringify(to_json(workbook), 2, 2);
     document.getElementById('output').innerHTML = output;
 }

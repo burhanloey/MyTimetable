@@ -35,21 +35,29 @@ function handleDrop(e) {
     }
 }
 
+function handleDragover(e) {
+    e.stopPropagation();
+    e.preventDefault();
+    e.dataTransfer.dropEffect = 'copy';
+}
+
 function processWorkbook(workbook) {
     var output = JSON.stringify(to_json(workbook), 2, 2);
-    document.getElementById('output').innerText = output;
+    document.getElementById('output').innerHTML = output;
 }
 
 function to_json(workbook) {
     var result = {};
     workbook.SheetNames.forEach(function(sheetName) {
-        var roa = X.utils.sheet_to_row_object_array(workbook.Sheets[sheetName]);
+        var roa = XLSX.utils.sheet_to_row_object_array(workbook.Sheets[sheetName]);
         if(roa.length > 0){
-                result[sheetName] = roa;
+            result[sheetName] = roa;
         }
     });
     return result;
 }
 
 var drop = document.getElementById('drop');
+drop.addEventListener('dragenter', handleDragover, false);
+drop.addEventListener('dragover', handleDragover, false);
 drop.addEventListener('drop', handleDrop, false);

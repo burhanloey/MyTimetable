@@ -1,18 +1,36 @@
-function DataViewModel(location, morning, evening, night) {
-    this.location = location;
-    this.morning = morning;
-    this.evening = evening;
-    this.night = night;
-}
-
-function TimetableViewModel() {
-    this.data = ko.observableArray([
-        new DataViewModel("MM6", "Programming", "DSS", "KO-K"),
-        new DataViewModel("BT4", "DSS", "Programming", "KO-K")
+function UserSubjects() {
+    this.subjects = ko.observableArray([
+        "WMES3302", "WXES1116", "GREK1007"
     ]);
 }
 
-ko.applyBindings(new TimetableViewModel());
+function RowViewModel(row) {
+    this.A = row.A === undefined ? "" : row.A;
+    this.B = row.B === undefined ? "" : row.B;
+    this.C = row.C === undefined ? "" : row.C;
+    this.D = row.D === undefined ? "" : row.D;
+    this.E = row.E === undefined ? "" : row.E;
+    this.F = row.F === undefined ? "" : row.F;
+    this.G = row.G === undefined ? "" : row.G;
+    this.H = row.H === undefined ? "" : row.H;
+    this.I = row.I === undefined ? "" : row.I;
+    this.J = row.J === undefined ? "" : row.J;
+    this.K = row.K === undefined ? "" : row.K;
+    this.L = row.L === undefined ? "" : row.L;
+    this.M = row.M === undefined ? "" : row.M;
+    this.N = row.N === undefined ? "" : row.N;
+}
+
+var TimetableViewModel = function() {
+    this.data = ko.observableArray([]);
+    
+    this.addData = function(row) {
+        this.data.push(new RowViewModel(row));
+    }
+}
+
+var timeTable = new TimetableViewModel();
+ko.applyBindings(timeTable);
 
 /* set up drag-and-drop event */
 function handleDrop(e) {
@@ -42,11 +60,20 @@ function handleDragover(e) {
 }
 
 function processWorkbook(workbook) {
-    var cellAddress = 'B1';
     var firstSheet = workbook.SheetNames[0];
     var worksheet = workbook.Sheets[firstSheet];
-    var cell = worksheet[cellAddress];
-    document.getElementById('preview').innerHTML = cellAddress + ': ' + cell.v;
+    for (var i = 2; i <= 17; i++) {
+        var row = {};
+        for (z in worksheet) {
+            if (z[0] === '!') {
+                continue;
+            }
+            if (z.charAt(1) == i.toString()) {
+                row[z.charAt(0)] = worksheet[z].v;
+            }
+        }
+        timeTable.addData(row);
+    }
     
     var output = JSON.stringify(to_json(workbook), 2, 2);
     document.getElementById('output').innerHTML = output;

@@ -64,26 +64,30 @@ function processWorkbook(workbook) {
         }
         regexStr += timeTable.subjects()[i];
     }
-    var regex = new RegExp(regexStr, "i");
+    var regex = new RegExp(regexStr);
     
     var firstSheet = workbook.SheetNames[0];
     var worksheet = workbook.Sheets[firstSheet];
-    for (var i = 2; i <= 17; i++) {
-        var row = {};
-        for (var cell in worksheet) {
-            if (cell[0] === '!') {
-                continue;
-            }
-            if (cell.charAt(1) === i.toString()) {
-                if (regex.test(worksheet[cell].v)) {
-                    row['A'] = firstSheet;
-                    row[cell.charAt(0)] = worksheet[cell].v;
-                    console.log(worksheet[cell].v);
+    workbook.SheetNames.forEach(function(sheetName) {
+        var worksheet = workbook.Sheets[sheetName];
+        for (var i = 0; i <= 17; i++) {
+            var row = {};
+            for (var cell in worksheet) {
+                if (cell[0] === '!') {
+                    continue;
+                }
+                if (cell.charAt(1) === i.toString()) {
+                    if (regex.test(worksheet[cell].v)) {
+                        row['A'] = sheetName;
+                        row[cell.charAt(0)] = worksheet[cell].v;
+                    }
                 }
             }
+            if (!jQuery.isEmptyObject(row)) {
+                timeTable.add(row);
+            }
         }
-        timeTable.add(row);
-    }
+    });
     
     var output = JSON.stringify(to_json(workbook), 2, 2);
     document.getElementById('output').innerHTML = output;

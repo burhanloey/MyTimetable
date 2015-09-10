@@ -78,6 +78,7 @@ function processWorkbook(workbook) {
         }
         timeTable.addData(row);
     }
+    document.getElementById('preview').innerHTML = JSON.stringify(worksheet['!merges'], 2, 2);
     
     var output = JSON.stringify(to_json(workbook), 2, 2);
     document.getElementById('output').innerHTML = output;

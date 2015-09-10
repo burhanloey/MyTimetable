@@ -69,7 +69,11 @@ function processWorkbook(workbook) {
                 continue;
             }
             if (z.charAt(1) == i.toString()) {
-                row[z.charAt(0)] = worksheet[z].v;
+                var regex = /WXES2114/;
+                var regexNoRoom = /W|^G/;
+                if (regex.test(worksheet[z].v) || !regexNoRoom.test(worksheet[z].v)) {
+                    row[z.charAt(0)] = worksheet[z].v;
+                }
             }
         }
         timeTable.addData(row);

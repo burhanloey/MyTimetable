@@ -1,10 +1,4 @@
-function UserSubjects() {
-    this.subjects = ko.observableArray([
-        "WMES3302", "WXES1116", "GREK1007"
-    ]);
-}
-
-function RowViewModel(row) {
+function Row(row) {
     this.A = row.A === undefined ? "" : row.A;
     this.B = row.B === undefined ? "" : row.B;
     this.C = row.C === undefined ? "" : row.C;
@@ -21,12 +15,15 @@ function RowViewModel(row) {
     this.N = row.N === undefined ? "" : row.N;
 }
 
-var TimetableViewModel = function() {
-    this.data = ko.observableArray([]);
+function TimetableViewModel() {
+    this.subjects = ko.observableArray([
+        "WXES1116", "WMES3302", "GREK1007"
+    ]);
+    this.row = ko.observableArray([]);
     
-    this.addData = function(row) {
-        this.data.push(new RowViewModel(row));
-    }
+    this.add = function(row) {
+        this.row.push(new Row(row));
+    };
 }
 
 var timeTable = new TimetableViewModel();
@@ -38,7 +35,7 @@ function handleDrop(e) {
     e.preventDefault();
     var files = e.dataTransfer.files;
     var i,f;
-    for (i = 0, f = files[i]; i != files.length; ++i) {
+    for (i = 0, f = files[i]; i !== files.length; ++i) {
         var reader = new FileReader();
         var name = f.name;
         reader.onload = function(e) {
@@ -60,25 +57,33 @@ function handleDragover(e) {
 }
 
 function processWorkbook(workbook) {
+    var regexStr = "";
+    for (var i = 0; i < timeTable.subjects().length; i++) {
+        if (i !== 0) {
+            regexStr += "|";
+        }
+        regexStr += timeTable.subjects()[i];
+    }
+    var regex = new RegExp(regexStr, "i");
+    
     var firstSheet = workbook.SheetNames[0];
     var worksheet = workbook.Sheets[firstSheet];
     for (var i = 2; i <= 17; i++) {
         var row = {};
-        for (z in worksheet) {
-            if (z[0] === '!') {
+        for (var cell in worksheet) {
+            if (cell[0] === '!') {
                 continue;
             }
-            if (z.charAt(1) == i.toString()) {
-                var regex = /WXES2114/;
-                var regexNoRoom = /W|^G/;
-                if (regex.test(worksheet[z].v) || !regexNoRoom.test(worksheet[z].v)) {
-                    row[z.charAt(0)] = worksheet[z].v;
+            if (cell.charAt(1) === i.toString()) {
+                if (regex.test(worksheet[cell].v)) {
+                    row['A'] = firstSheet;
+                    row[cell.charAt(0)] = worksheet[cell].v;
+                    console.log(worksheet[cell].v);
                 }
             }
         }
-        timeTable.addData(row);
+        timeTable.add(row);
     }
-    document.getElementById('preview').innerHTML = JSON.stringify(worksheet['!merges'], 2, 2);
     
     var output = JSON.stringify(to_json(workbook), 2, 2);
     document.getElementById('output').innerHTML = output;

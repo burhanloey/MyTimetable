@@ -57,17 +57,8 @@ function handleDragover(e) {
 }
 
 function processWorkbook(workbook) {
-    var regexStr = "";
-    for (var i = 0; i < timeTable.subjects().length; i++) {
-        if (i !== 0) {
-            regexStr += "|";
-        }
-        regexStr += timeTable.subjects()[i];
-    }
-    var regex = new RegExp(regexStr);
+    var regex = createRegex();
     
-    var firstSheet = workbook.SheetNames[0];
-    var worksheet = workbook.Sheets[firstSheet];
     workbook.SheetNames.forEach(function(sheetName) {
         var worksheet = workbook.Sheets[sheetName];
         for (var i = 0; i <= 17; i++) {
@@ -91,6 +82,17 @@ function processWorkbook(workbook) {
     
     var output = JSON.stringify(to_json(workbook), 2, 2);
     document.getElementById('output').innerHTML = output;
+}
+
+function createRegex() {
+    var regexStr = "";
+    for (var i = 0; i < timeTable.subjects().length; i++) {
+        if (i !== 0) {
+            regexStr += "|";
+        }
+        regexStr += timeTable.subjects()[i];
+    }
+    return new RegExp(regexStr);
 }
 
 function to_json(workbook) {

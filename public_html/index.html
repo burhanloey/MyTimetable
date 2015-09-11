@@ -8,36 +8,38 @@
         <link rel="stylesheet" href="stylesheets/style.css" />
     </head>
     <body>
-        <table>
-            <thead>
-                <tr>
-                    <th>Day</th>
-                    <th>8.00 - 8.59</th><th>9.00 - 9.59</th><th>10.00 - 10.59</th>
-                    <th>11.00 - 11.59</th><th>12.00 - 12.59</th><th>13.00 - 13.59</th>
-                    <th>14.00 - 14.59</th><th>15.00 - 15.59</th><th>16.00 - 16.59</th>
-                    <th>17.00 - 17.59</th><th>18.00 - 18.59</th><th>19.00 - 19.59</th>
-                    <th>20.00 - 20.59</th>
-                </tr>
-            </thead>
-            <tbody data-bind="foreach: row">
-                <tr>
-                    <td data-bind="text: A"></td>
-                    <td data-bind="text: B"></td>
-                    <td data-bind="text: C"></td>
-                    <td data-bind="text: D"></td>
-                    <td data-bind="text: E"></td>
-                    <td data-bind="text: F"></td>
-                    <td data-bind="text: G"></td>
-                    <td data-bind="text: H"></td>
-                    <td data-bind="text: I"></td>
-                    <td data-bind="text: J"></td>
-                    <td data-bind="text: K"></td>
-                    <td data-bind="text: L"></td>
-                    <td data-bind="text: M"></td>
-                    <td data-bind="text: N"></td>
-                </tr>
-            </tbody>
-        </table>
+        <div class="box-table">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Day</th>
+                        <th>8.00 - 8.59</th><th>9.00 - 9.59</th><th>10.00 - 10.59</th>
+                        <th>11.00 - 11.59</th><th>12.00 - 12.59</th><th>13.00 - 13.59</th>
+                        <th>14.00 - 14.59</th><th>15.00 - 15.59</th><th>16.00 - 16.59</th>
+                        <th>17.00 - 17.59</th><th>18.00 - 18.59</th><th>19.00 - 19.59</th>
+                        <th>20.00 - 20.59</th>
+                    </tr>
+                </thead>
+                <tbody data-bind="foreach: row">
+                    <tr>
+                        <td data-bind="text: A"></td>
+                        <td data-bind="text: B"></td>
+                        <td data-bind="text: C"></td>
+                        <td data-bind="text: D"></td>
+                        <td data-bind="text: E"></td>
+                        <td data-bind="text: F"></td>
+                        <td data-bind="text: G"></td>
+                        <td data-bind="text: H"></td>
+                        <td data-bind="text: I"></td>
+                        <td data-bind="text: J"></td>
+                        <td data-bind="text: K"></td>
+                        <td data-bind="text: L"></td>
+                        <td data-bind="text: M"></td>
+                        <td data-bind="text: N"></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
         
         <div id="drop">Drop file here</div>
         <pre id="preview"></pre>

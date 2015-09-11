@@ -1,18 +1,18 @@
 function Row(row) {
-    this.A = row.A === undefined ? "" : row.A;
-    this.B = row.B === undefined ? "" : row.B;
-    this.C = row.C === undefined ? "" : row.C;
-    this.D = row.D === undefined ? "" : row.D;
-    this.E = row.E === undefined ? "" : row.E;
-    this.F = row.F === undefined ? "" : row.F;
-    this.G = row.G === undefined ? "" : row.G;
-    this.H = row.H === undefined ? "" : row.H;
-    this.I = row.I === undefined ? "" : row.I;
-    this.J = row.J === undefined ? "" : row.J;
-    this.K = row.K === undefined ? "" : row.K;
-    this.L = row.L === undefined ? "" : row.L;
-    this.M = row.M === undefined ? "" : row.M;
-    this.N = row.N === undefined ? "" : row.N;
+    this.A = (row.A === undefined) ? "" : row.A;
+    this.B = (row.B === undefined) ? "" : row.B;
+    this.C = (row.C === undefined) ? "" : row.C;
+    this.D = (row.D === undefined) ? "" : row.D;
+    this.E = (row.E === undefined) ? "" : row.E;
+    this.F = (row.F === undefined) ? "" : row.F;
+    this.G = (row.G === undefined) ? "" : row.G;
+    this.H = (row.H === undefined) ? "" : row.H;
+    this.I = (row.I === undefined) ? "" : row.I;
+    this.J = (row.J === undefined) ? "" : row.J;
+    this.K = (row.K === undefined) ? "" : row.K;
+    this.L = (row.L === undefined) ? "" : row.L;
+    this.M = (row.M === undefined) ? "" : row.M;
+    this.N = (row.N === undefined) ? "" : row.N;
 }
 
 function TimetableViewModel() {

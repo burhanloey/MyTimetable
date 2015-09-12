@@ -88,12 +88,11 @@ function processWorkbook(workbook) {
                     }
                     row.addColumn(text, columnSpan(cell, worksheet));
                 } else {
-                    document.getElementById('preview').innerHTML += "There is a clash between some of the classes<br/>";
+                    document.getElementById('preview').innerHTML += worksheet[cell].v + " is clashing with some of the classes<br/>";
                     row.columns()[position].text(text);
                     row.columns()[position].columnSpan(columnSpan(cell, worksheet));
                 }
             }
-//            console.log(day + "!" + cell + "=" + JSON.stringify(worksheet[cell].v));
         }
         
         /* Fill the rest of row with empty cell */
@@ -130,7 +129,6 @@ var columnSpan = function(cell, worksheet) {
         var endColumn = parseInt(JSON.stringify(ranges[i].e.c));
         
         if (column === startColumn && row === startRow) {
-            console.log(worksheet[cell].v + ": " + startColumn + "," + endColumn);
             return 1 + (endColumn - startColumn);
         }
     }

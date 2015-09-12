@@ -1,28 +1,37 @@
-function Row(row) {
-    this.A = (row.A === undefined) ? "" : row.A;
-    this.B = (row.B === undefined) ? "" : row.B;
-    this.C = (row.C === undefined) ? "" : row.C;
-    this.D = (row.D === undefined) ? "" : row.D;
-    this.E = (row.E === undefined) ? "" : row.E;
-    this.F = (row.F === undefined) ? "" : row.F;
-    this.G = (row.G === undefined) ? "" : row.G;
-    this.H = (row.H === undefined) ? "" : row.H;
-    this.I = (row.I === undefined) ? "" : row.I;
-    this.J = (row.J === undefined) ? "" : row.J;
-    this.K = (row.K === undefined) ? "" : row.K;
-    this.L = (row.L === undefined) ? "" : row.L;
-    this.M = (row.M === undefined) ? "" : row.M;
-    this.N = (row.N === undefined) ? "" : row.N;
+function Row() {
+    this.columns = ko.observableArray([]);
+    
+    this.getLength = ko.computed(function() {
+        var lengthOfRow = 0;
+        for (var column = 0; column < this.columns().length; column++) {
+            lengthOfRow += this.columns()[column].columnSpan();
+        }
+        return lengthOfRow;
+    }, this);
+    
+    this.setDay = function(day) {
+        this.columns()[0].cell(day);
+    };
+    
+    this.addColumn = function(cell, columnSpan) {
+        this.columns.push(new Column(cell, columnSpan));
+    };
+}
+
+function Column(text, columnSpan) {
+    this.columnNo = ko.observable();
+    this.text = ko.observable(text);
+    this.columnSpan = ko.observable(columnSpan);
 }
 
 function TimetableViewModel() {
     this.subjects = ko.observableArray([
-        "WXES1116", "WMES3302", "GREK1007"
+        "G4.*WXES1116", "WMES3302", "GREK1007"
     ]);
-    this.row = ko.observableArray([]);
+    this.rows = ko.observableArray([]);
     
-    this.add = function(row) {
-        this.row.push(new Row(row));
+    this.addRow = function(row) {
+        this.rows.push(row);
     };
 }
 
@@ -59,25 +68,40 @@ function handleDragover(e) {
 function processWorkbook(workbook) {
     var regex = createRegex();
     
-    workbook.SheetNames.forEach(function(sheetName) {
-        var worksheet = workbook.Sheets[sheetName];
-        for (var i = 0; i <= 17; i++) {
-            var row = {};
-            for (var cell in worksheet) {
-                if (cell[0] === '!') {
-                    continue;
-                }
-                if (cell.charAt(1) === i.toString()) {
-                    if (regex.test(worksheet[cell].v)) {
-                        row['A'] = sheetName;
-                        row[cell.charAt(0)] = worksheet[cell].v;
+    var sheetNameList = workbook.SheetNames;
+    sheetNameList.forEach(function(day) {
+        var row = new Row();
+        row.addColumn(day, 1);
+        
+        var worksheet = workbook.Sheets[day];
+        for (var cell in worksheet) {
+            if (cell[0] === '!') {
+                continue;
+            }
+            if (regex.test(worksheet[cell].v)) {    // if found subjects
+                console.log("detected: " + worksheet[cell].v);
+                var position = cell.charCodeAt(0) % 65;
+                var text = worksheet[cell].v + " - " + worksheet['A' + cell.slice(1)].v;
+                if (row.getLength() <= position) {
+                    for (var i = row.getLength(); i < position; i++) {
+                        row.addColumn("", 1);
                     }
+                    row.addColumn(text, 1);
+                } else {
+                    document.getElementById('preview').innerHTML += "There is a clash between some of the classes<br/>";
+                    row.columns()[position].text(text);
+                    row.columns()[position].columnSpan(1);
                 }
             }
-            if (!jQuery.isEmptyObject(row)) {
-                timeTable.add(row);
-            }
+//            console.log(day + "!" + cell + "=" + JSON.stringify(worksheet[cell].v));
         }
+        
+        /* Fill the rest of row with empty cell */
+        for (var column = row.getLength(); column <= 13; column++) {
+            row.addColumn("", 1);
+        }
+        
+        timeTable.addRow(row);
     });
     
     var output = JSON.stringify(to_json(workbook), 2, 2);

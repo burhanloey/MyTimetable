@@ -79,18 +79,18 @@ function processWorkbook(workbook) {
                 continue;
             }
             if (regex.test(worksheet[cell].v)) {    // if found subjects
-                console.log("detected: " + worksheet[cell].v);
                 var position = cell.charCodeAt(0) % 65;
                 var text = worksheet[cell].v + " - " + worksheet['A' + cell.slice(1)].v;
+                
                 if (row.getLength() <= position) {
                     for (var i = row.getLength(); i < position; i++) {
                         row.addColumn("", 1);
                     }
-                    row.addColumn(text, 1);
+                    row.addColumn(text, columnSpan(cell, worksheet));
                 } else {
                     document.getElementById('preview').innerHTML += "There is a clash between some of the classes<br/>";
                     row.columns()[position].text(text);
-                    row.columns()[position].columnSpan(1);
+                    row.columns()[position].columnSpan(columnSpan(cell, worksheet));
                 }
             }
 //            console.log(day + "!" + cell + "=" + JSON.stringify(worksheet[cell].v));
@@ -118,6 +118,24 @@ function createRegex() {
     }
     return new RegExp(regexStr);
 }
+
+var columnSpan = function(cell, worksheet) {
+    var column = cell.charCodeAt(0) % 65;
+    var row = parseInt(cell.slice(1));
+    
+    var ranges = worksheet['!merges'];
+    for (var i = 0; i < ranges.length; i++) {
+        var startColumn = parseInt(JSON.stringify(ranges[i].s.c));
+        var startRow = parseInt(JSON.stringify(ranges[i].s.r));
+        var endColumn = parseInt(JSON.stringify(ranges[i].e.c));
+        
+        if (column === startColumn && row === startRow) {
+            console.log(worksheet[cell].v + ": " + startColumn + "," + endColumn);
+            return 1 + (endColumn - startColumn);
+        }
+    }
+    return 1;
+};
 
 function to_json(workbook) {
     var result = {};

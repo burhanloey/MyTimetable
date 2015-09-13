@@ -1,49 +1,63 @@
+/* global XLSX, ko */
+
 function Subject(name) {
-    this.name = ko.observable(name);
+    var self = this;
+    
+    self.name = ko.observable(name);
 }
 
 function Row() {
-    this.columns = ko.observableArray([]);
+    var self = this;
     
-    this.getLength = ko.computed(function() {
+    self.columns = ko.observableArray([]);
+    
+    self.getLength = ko.computed(function() {
         var lengthOfRow = 0;
-        for (var column = 0; column < this.columns().length; column++) {
-            lengthOfRow += this.columns()[column].columnSpan();
+        for (var column = 0; column < self.columns().length; column++) {
+            lengthOfRow += self.columns()[column].columnSpan();
         }
         return lengthOfRow;
-    }, this);
+    });
     
-    this.setDay = function(day) {
-        this.columns()[0].cell(day);
+    self.setDay = function(day) {
+        self.columns()[0].cell(day);
     };
     
-    this.addColumn = function(cell, columnSpan) {
-        this.columns.push(new Column(cell, columnSpan));
+    self.addColumn = function(cell, columnSpan) {
+        self.columns.push(new Column(cell, columnSpan));
     };
 }
 
 function Column(text, columnSpan) {
-    this.text = ko.observable(text);
-    this.columnSpan = ko.observable(columnSpan);
+    var self = this;
+    
+    self.text = ko.observable(text);
+    self.columnSpan = ko.observable(columnSpan);
 }
 
 function TimetableViewModel() {
-    this.subjects = ko.observableArray([
+    var self = this;
+    
+    self.subjects = ko.observableArray([
         new Subject("G4.*WXES1116"),
         new Subject("WMES3302"),
         new Subject("GREK1007")
     ]);
-    this.rows = ko.observableArray([]);
+    self.rows = ko.observableArray([]);
     
-    this.addRow = function(row) {
-        this.rows.push(row);
+    self.addRow = function(row) {
+        self.rows.push(row);
     };
     
-    this.addSubject = function() {
-        this.subjects.push(new Subject());
+    self.addSubject = function() {
+        self.subjects.push(new Subject());
     };
     
-    this.refresh = function() {
+    self.removeSubject = function(subject) {
+        self.subjects.remove(subject);
+    };
+    
+    self.refresh = function() {
         processWorkbook(workbook);
     };
 }

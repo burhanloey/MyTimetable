@@ -8,6 +8,14 @@
         <link rel="stylesheet" href="stylesheets/style.css" />
     </head>
     <body>
+        <div class="subject-list">
+            <ul data-bind="foreach: subjects">
+                <li><input data-bind="value: name" /></li>
+            </ul>
+            <button data-bind="click: addSubject">Add subject</button>
+            <button data-bind="click: refresh">Refresh</button>
+        </div>
+        
         <div class="box-table">
             <table>
                 <thead>
@@ -29,7 +37,7 @@
         </div>
         
         <div id="drop">Drop file here</div>
-        <pre id="preview"></pre>
+        <pre id="error"></pre>
         <pre id="output"></pre>
         
         <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.8.0/xlsx.core.min.js"></script>

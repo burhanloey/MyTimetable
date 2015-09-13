@@ -1,3 +1,7 @@
+function Subject(name) {
+    this.name = ko.observable(name);
+}
+
 function Row() {
     this.columns = ko.observableArray([]);
     
@@ -19,19 +23,28 @@ function Row() {
 }
 
 function Column(text, columnSpan) {
-    this.columnNo = ko.observable();
     this.text = ko.observable(text);
     this.columnSpan = ko.observable(columnSpan);
 }
 
 function TimetableViewModel() {
     this.subjects = ko.observableArray([
-        "G4.*WXES1116", "WMES3302", "GREK1007"
+        new Subject("G4.*WXES1116"),
+        new Subject("WMES3302"),
+        new Subject("GREK1007")
     ]);
     this.rows = ko.observableArray([]);
     
     this.addRow = function(row) {
         this.rows.push(row);
+    };
+    
+    this.addSubject = function() {
+        this.subjects.push(new Subject());
+    };
+    
+    this.refresh = function() {
+        processWorkbook(workbook);
     };
 }
 
@@ -39,6 +52,7 @@ var timeTable = new TimetableViewModel();
 ko.applyBindings(timeTable);
 
 /* set up drag-and-drop event */
+var workbook;
 function handleDrop(e) {
     e.stopPropagation();
     e.preventDefault();
@@ -51,7 +65,7 @@ function handleDrop(e) {
             var data = e.target.result;
 
             /* if binary string, read with type 'binary' */
-            var workbook = XLSX.read(data, {type: 'binary'});
+            workbook = XLSX.read(data, {type: 'binary'});
 
             processWorkbook(workbook);
         };
@@ -66,6 +80,10 @@ function handleDragover(e) {
 }
 
 function processWorkbook(workbook) {
+    timeTable.rows.removeAll();
+    
+    var error = "";
+    
     var regex = createRegex();
     
     var sheetNameList = workbook.SheetNames;
@@ -88,7 +106,7 @@ function processWorkbook(workbook) {
                     }
                     row.addColumn(text, columnSpan(cell, worksheet));
                 } else {
-                    document.getElementById('preview').innerHTML += worksheet[cell].v + " is clashing with some of the classes<br/>";
+                    error += worksheet[cell].v + " is clashing with some of the classes<br/>";
                     row.columns()[position].text(text);
                     row.columns()[position].columnSpan(columnSpan(cell, worksheet));
                 }
@@ -102,6 +120,7 @@ function processWorkbook(workbook) {
         
         timeTable.addRow(row);
     });
+    document.getElementById('error').innerHTML = error;
     
     var output = JSON.stringify(to_json(workbook), 2, 2);
     document.getElementById('output').innerHTML = output;
@@ -113,7 +132,7 @@ function createRegex() {
         if (i !== 0) {
             regexStr += "|";
         }
-        regexStr += timeTable.subjects()[i];
+        regexStr += timeTable.subjects()[i].name();
     }
     return new RegExp(regexStr);
 }

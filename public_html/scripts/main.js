@@ -58,6 +58,7 @@ function TimetableViewModel() {
     };
     
     self.refresh = function() {
+        $("#error").hide();
         processWorkbook(workbook);
     };
 }
@@ -96,8 +97,6 @@ function handleDragover(e) {
 function processWorkbook(workbook) {
     timeTable.rows.removeAll();
     
-    var error = "";
-    
     var regex = createRegex();
     
     var sheetNameList = workbook.SheetNames;
@@ -120,7 +119,7 @@ function processWorkbook(workbook) {
                     }
                     row.addColumn(text, columnSpan(cell, worksheet));
                 } else {
-                    error += worksheet[cell].v + " is clashing with some of the classes<br/>";
+                    $("#error").show();
                     row.columns()[position].text(text);
                     row.columns()[position].columnSpan(columnSpan(cell, worksheet));
                 }
@@ -134,7 +133,6 @@ function processWorkbook(workbook) {
         
         timeTable.addRow(row);
     });
-    document.getElementById('error').innerHTML = error;
     
     var output = JSON.stringify(to_json(workbook), 2, 2);
     document.getElementById('output').innerHTML = output;

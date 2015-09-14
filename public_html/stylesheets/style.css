@@ -1,7 +1,5 @@
 #error {
-    background: lightgreen;
-    text-align: center;
-    padding: 1em;
+    display: none;
 }
 
 #drop {

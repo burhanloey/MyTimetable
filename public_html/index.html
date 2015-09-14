@@ -5,6 +5,7 @@
         <title>Timetable Organizer</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.5/css/bootstrap.min.css" />
         <link rel="stylesheet" href="stylesheets/style.css" />
     </head>
     <body>
@@ -16,8 +17,8 @@
             <button data-bind="click: refresh">Refresh</button>
         </div>
         
-        <div class="box-table">
-            <table>
+        <div class="container">
+            <table class="table table-bordered table-hover table-condensed">
                 <thead>
                     <tr>
                         <th>Day</th>
@@ -40,9 +41,10 @@
         <pre id="error"></pre>
         <pre id="output"></pre>
         
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.8.0/xlsx.core.min.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/knockout/3.3.0/knockout-min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.5/js/bootstrap.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/knockout/3.3.0/knockout-min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.8.0/xlsx.core.min.js"></script>
         <script src="scripts/main.js"></script>
     </body>
 </html>

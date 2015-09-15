@@ -8,3 +8,12 @@
     padding: 1em;
     margin-top: 5px;
 }
+
+.subject-list {
+    width: 300px;
+}
+
+.list-group,
+.list-group-item {
+    border: none;
+}

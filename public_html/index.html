@@ -9,35 +9,46 @@
         <link rel="stylesheet" href="stylesheets/style.css" />
     </head>
     <body>
-        <div class="subject-list">
-            <ul data-bind="foreach: subjects">
-                <li><input data-bind="value: name" /><a href="#" data-bind="click: $root.removeSubject">Remove</a></li>
-            </ul>
-            <button data-bind="click: addSubject">Add subject</button>
-            <button data-bind="click: refresh">Refresh</button>
-        </div>
-        
-        <div class="container">
-            <table class="table table-bordered table-hover table-condensed">
-                <thead>
-                    <tr>
-                        <th>Day</th>
-                        <th>8.00 - 8.59</th><th>9.00 - 9.59</th><th>10.00 - 10.59</th>
-                        <th>11.00 - 11.59</th><th>12.00 - 12.59</th><th>13.00 - 13.59</th>
-                        <th>14.00 - 14.59</th><th>15.00 - 15.59</th><th>16.00 - 16.59</th>
-                        <th>17.00 - 17.59</th><th>18.00 - 18.59</th><th>19.00 - 19.59</th>
-                        <th>20.00 - 20.59</th>
-                    </tr>
-                </thead>
-                <tbody data-bind="foreach: rows">
-                    <tr data-bind="foreach: columns">
-                        <td data-bind="text: text, attr: { colspan: columnSpan }"></td>
-                    </tr>
-                </tbody>
-            </table>
-            
-            <div id="error" class="alert alert-warning">
-                <strong>Warning!</strong> Some of the classes are clashing, or maybe you did not specify the group for certain classes.
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-3">
+                    <ul class="list-group" data-bind="foreach: subjects">
+                        <li class="list-group-item">
+                            <div class="input-group">
+                                <input class="form-control" id="inputdefault" data-bind="value: name" /> 
+                                <span class="input-group-btn">
+                                    <button class="btn btn-default" type="button" data-bind="click: $root.removeSubject"><span class="glyphicon glyphicon-remove"></span></button>
+                                </span>
+                            </div>
+                        </li>
+                    </ul>
+                    <button class="btn btn-primary" data-bind="click: addSubject"><span class="glyphicon glyphicon-plus-sign"></span> Add Subject</button>
+                    <button class="btn btn-primary" data-bind="click: refresh"><span class="glyphicon glyphicon-refresh"></span> Refresh</button>
+                </div>
+
+                <div class="col-md-9">
+                    <table class="table table-bordered table-hover table-condensed">
+                        <thead>
+                            <tr>
+                                <th>Day</th>
+                                <th>8.00 - 8.59</th><th>9.00 - 9.59</th><th>10.00 - 10.59</th>
+                                <th>11.00 - 11.59</th><th>12.00 - 12.59</th><th>13.00 - 13.59</th>
+                                <th>14.00 - 14.59</th><th>15.00 - 15.59</th><th>16.00 - 16.59</th>
+                                <th>17.00 - 17.59</th><th>18.00 - 18.59</th><th>19.00 - 19.59</th>
+                                <th>20.00 - 20.59</th>
+                            </tr>
+                        </thead>
+                        <tbody data-bind="foreach: rows">
+                            <tr data-bind="foreach: columns">
+                                <td data-bind="text: text, attr: { colspan: columnSpan }"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <div id="error" class="alert alert-warning">
+                        <strong>Warning!</strong> Some of the classes are clashing, or maybe you did not specify the group for certain classes.
+                    </div>
+                </div>
             </div>
         </div>
         

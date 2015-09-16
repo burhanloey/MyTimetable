@@ -14,7 +14,7 @@ function Row() {
     self.getLength = ko.computed(function() {
         var lengthOfRow = 0;
         for (var column = 0; column < self.columns().length; column++) {
-            lengthOfRow += self.columns()[column].columnSpan();
+            lengthOfRow += self.columns()[column].rowSpan();
         }
         return lengthOfRow;
     });
@@ -23,16 +23,16 @@ function Row() {
         self.columns()[0].cell(day);
     };
     
-    self.addColumn = function(cell, columnSpan) {
-        self.columns.push(new Column(cell, columnSpan));
+    self.addColumn = function(subjectName, rowSpan) {
+        self.columns.push(new Column(subjectName, rowSpan));
     };
 }
 
-function Column(text, columnSpan) {
+function Column(subjectName, rowSpan) {
     var self = this;
     
-    self.text = ko.observable(text);
-    self.columnSpan = ko.observable(columnSpan);
+    self.subjectName = ko.observable(subjectName);
+    self.rowSpan = ko.observable(rowSpan);
 }
 
 function TimetableViewModel() {
@@ -83,7 +83,7 @@ function handleDrop(e) {
             /* if binary string, read with type 'binary' */
             workbook = XLSX.read(data, {type: 'binary'});
 
-            processWorkbook(workbook);
+            processWorkbook();
         };
         reader.readAsBinaryString(f);
     }
@@ -95,32 +95,41 @@ function handleDragover(e) {
     e.dataTransfer.dropEffect = 'copy';
 }
 
-function processWorkbook(workbook) {
+var filteredTimetable, sheetNameList;
+function processWorkbook() {
     timeTable.rows.removeAll();
     
     var regex = createRegex();
     
-    var filteredTimetable = {MONDAY: {}, TUESDAY: {}, WEDNESDAY: {}, THURSDAY: {}, FRIDAY: {}};
+    filteredTimetable = {MONDAY: {}, TUESDAY: {}, WEDNESDAY: {}, THURSDAY: {}, FRIDAY: {}};
     
-    var sheetNameList = ["MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY"];
+    /* extract information from workbook */
+    sheetNameList = ["MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY"];
     sheetNameList.forEach(function(day) {
         var worksheet = workbook.Sheets[day];
         for (var cell in worksheet) {
             if(cell[0] === '!') continue;
             if (regex.test(worksheet[cell].v)) {
-//                console.log(day + "!" + cell + "=" + JSON.stringify(worksheet[cell].v));
-                filteredTimetable[day][cell[0] + 1] = {name: worksheet[cell].v, rowspan: calcRowSpan(cell, worksheet)};
+                var rowSpanRequired = calcRowSpan(cell, worksheet);
+                
+                if (!filteredTimetable[day].hasOwnProperty(worksheet[cell[0] + 1].v)) {
+                    var subjectName = worksheet[cell].v + " - " + worksheet['A' + cell.slice(1)].v; // append with location
+                    filteredTimetable[day][worksheet[cell[0] + 1].v] = {name: subjectName, rowspan: rowSpanRequired};
+                    
+                    /* fill next cells to represent merged cells */
+                    var currentCell = cell.charCodeAt(0);
+                    for (var i = 1; i < rowSpanRequired; i++) {
+                        var nextCell = String.fromCharCode(currentCell + i);
+                        filteredTimetable[day][worksheet[nextCell + 1].v] = {name: "merged", rowspan: 1};
+                    }
+                } else {
+                    $("#error").show();
+                }
             }
         }
     });
     
-    for (var day in filteredTimetable) {
-        var dayObj = filteredTimetable[day];
-        for (var time in dayObj) {
-            var timeObj = dayObj[time];
-            console.log("subject: " + timeObj.name + ", span: " + timeObj.rowspan);
-        }
-    }
+    fillTimetable();
     
     var output = JSON.stringify(to_json(workbook), 2, 2);
     document.getElementById('output').innerHTML = output;
@@ -153,6 +162,27 @@ var calcRowSpan = function(cell, worksheet) {
     }
     return 1;
 };
+
+function fillTimetable() {
+    for (var i = 66; i <= 78; i++) {    // from B to N
+        var row = new Row();
+        var firstWorksheet = workbook.Sheets[sheetNameList[0]];
+        var time = firstWorksheet[String.fromCharCode(i) + 1].v;
+        row.addColumn(time, 1);
+        
+        sheetNameList.forEach(function(day) {
+            if (filteredTimetable[day].hasOwnProperty(time)) {
+                if (filteredTimetable[day][time].name !== "merged") {
+                    row.addColumn(filteredTimetable[day][time].name, filteredTimetable[day][time].rowspan);
+                }
+            } else {
+                row.addColumn("", 1);
+            }
+        });
+        
+        timeTable.addRow(row);
+    }
+}
 
 function to_json(workbook) {
     var result = {};

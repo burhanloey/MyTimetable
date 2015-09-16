@@ -27,6 +27,10 @@
                 </div>
 
                 <div class="col-md-9">
+                    <div id="error" class="alert alert-warning">
+                        <strong>Warning!</strong> Some of the classes are clashing, or maybe you did not specify the group for certain classes.
+                    </div>
+                    
                     <table class="table table-bordered table-hover table-condensed">
                         <thead>
                             <tr>
@@ -37,14 +41,10 @@
                         </thead>
                         <tbody data-bind="foreach: rows">
                             <tr data-bind="foreach: columns">
-                                <td data-bind="text: text, attr: { rowspan: columnSpan }"></td>
+                                <td data-bind="text: subjectName, attr: { rowspan: rowSpan }"></td>
                             </tr>
                         </tbody>
                     </table>
-
-                    <div id="error" class="alert alert-warning">
-                        <strong>Warning!</strong> Some of the classes are clashing, or maybe you did not specify the group for certain classes.
-                    </div>
                 </div>
             </div>
         </div>

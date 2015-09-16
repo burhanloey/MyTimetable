@@ -17,3 +17,12 @@
 table {
     table-layout: fixed;
 }
+
+th, td {
+    width: 150px;
+}
+
+th {
+    background: #F0F0F0;
+    text-align: center;
+}

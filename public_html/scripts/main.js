@@ -11,28 +11,20 @@ function Row() {
     
     self.columns = ko.observableArray([]);
     
-    self.getLength = ko.computed(function() {
-        var lengthOfRow = 0;
-        for (var column = 0; column < self.columns().length; column++) {
-            lengthOfRow += self.columns()[column].rowSpan();
-        }
-        return lengthOfRow;
-    });
-    
-    self.setDay = function(day) {
-        self.columns()[0].cell(day);
-    };
-    
-    self.addColumn = function(subjectName, rowSpan) {
-        self.columns.push(new Column(subjectName, rowSpan));
+    self.addColumn = function(subjectName, rowSpan, isTime) {
+        self.columns.push(new Column(subjectName, rowSpan, isTime));
     };
 }
 
-function Column(subjectName, rowSpan) {
+function Column(subjectName, rowSpan, isTime) {
     var self = this;
     
     self.subjectName = ko.observable(subjectName);
     self.rowSpan = ko.observable(rowSpan);
+    self.isTime = ko.observable(isTime);
+    self.highlight = ko.computed(function() {
+        return self.subjectName().length > 0 && !self.isTime();
+    });
 }
 
 function TimetableViewModel() {
@@ -40,7 +32,6 @@ function TimetableViewModel() {
     
     self.subjects = ko.observableArray([
         new Subject("G4.*WXES1116"),
-//        new Subject("WXES1116"),
         new Subject("WMES3302"),
         new Subject("GREK1007")
     ]);
@@ -168,15 +159,15 @@ function fillTimetable() {
         var row = new Row();
         var firstWorksheet = workbook.Sheets[sheetNameList[0]];
         var time = firstWorksheet[String.fromCharCode(i) + 1].v;
-        row.addColumn(time, 1);
+        row.addColumn(time, 1, true);
         
         sheetNameList.forEach(function(day) {
             if (filteredTimetable[day].hasOwnProperty(time)) {
                 if (filteredTimetable[day][time].name !== "merged") {
-                    row.addColumn(filteredTimetable[day][time].name, filteredTimetable[day][time].rowspan);
+                    row.addColumn(filteredTimetable[day][time].name, filteredTimetable[day][time].rowspan, false);
                 }
             } else {
-                row.addColumn("", 1);
+                row.addColumn("", 1, false);
             }
         });
         

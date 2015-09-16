@@ -31,20 +31,21 @@
                         <strong>Warning!</strong> Some of the classes are clashing, or maybe you did not specify the group for certain classes.
                     </div>
                     
-                    <table class="table table-bordered table-hover table-condensed">
-                        <thead>
-                            <tr>
-                                <th>Day</th>
-                                <th>Monday</th><th>Tuesday</th><th>Wednesday</th>
-                                <th>Thursday</th><th>Friday</th>
-                            </tr>
-                        </thead>
-                        <tbody data-bind="foreach: rows">
-                            <tr data-bind="foreach: columns">
-                                <td data-bind="text: subjectName, attr: { rowspan: rowSpan }"></td>
-                            </tr>
-                        </tbody>
-                    </table>
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-condensed">
+                            <thead>
+                                <tr>
+                                    <th></th><th>Monday</th><th>Tuesday</th>
+                                    <th>Wednesday</th><th>Thursday</th><th>Friday</th>
+                                </tr>
+                            </thead>
+                            <tbody data-bind="foreach: rows">
+                                <tr data-bind="foreach: columns">
+                                    <td data-bind="text: subjectName, attr: { rowspan: rowSpan }, style: { background: highlight() ? '#00A27C' : 'white', color: highlight() ? 'white' : 'black' }"></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>

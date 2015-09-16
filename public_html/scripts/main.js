@@ -40,6 +40,7 @@ function TimetableViewModel() {
     
     self.subjects = ko.observableArray([
         new Subject("G4.*WXES1116"),
+//        new Subject("WXES1116"),
         new Subject("WMES3302"),
         new Subject("GREK1007")
     ]);
@@ -99,40 +100,27 @@ function processWorkbook(workbook) {
     
     var regex = createRegex();
     
-    var sheetNameList = workbook.SheetNames;
+    var filteredTimetable = {MONDAY: {}, TUESDAY: {}, WEDNESDAY: {}, THURSDAY: {}, FRIDAY: {}};
+    
+    var sheetNameList = ["MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY"];
     sheetNameList.forEach(function(day) {
-        var row = new Row();
-        row.addColumn(day, 1);
-        
         var worksheet = workbook.Sheets[day];
         for (var cell in worksheet) {
-            if (cell[0] === '!') {
-                continue;
-            }
-            if (regex.test(worksheet[cell].v)) {    // if found subjects
-                var position = cell.charCodeAt(0) % 65;
-                var text = worksheet[cell].v + " - " + worksheet['A' + cell.slice(1)].v;
-                
-                if (row.getLength() <= position) {
-                    for (var i = row.getLength(); i < position; i++) {
-                        row.addColumn("", 1);
-                    }
-                    row.addColumn(text, columnSpan(cell, worksheet));
-                } else {
-                    $("#error").show();
-                    row.columns()[position].text(text);
-                    row.columns()[position].columnSpan(columnSpan(cell, worksheet));
-                }
+            if(cell[0] === '!') continue;
+            if (regex.test(worksheet[cell].v)) {
+//                console.log(day + "!" + cell + "=" + JSON.stringify(worksheet[cell].v));
+                filteredTimetable[day][cell[0] + 1] = {name: worksheet[cell].v, rowspan: calcRowSpan(cell, worksheet)};
             }
         }
-        
-        /* Fill the rest of row with empty cell */
-        for (var column = row.getLength(); column <= 13; column++) {
-            row.addColumn("", 1);
-        }
-        
-        timeTable.addRow(row);
     });
+    
+    for (var day in filteredTimetable) {
+        var dayObj = filteredTimetable[day];
+        for (var time in dayObj) {
+            var timeObj = dayObj[time];
+            console.log("subject: " + timeObj.name + ", span: " + timeObj.rowspan);
+        }
+    }
     
     var output = JSON.stringify(to_json(workbook), 2, 2);
     document.getElementById('output').innerHTML = output;
@@ -149,7 +137,7 @@ function createRegex() {
     return new RegExp(regexStr);
 }
 
-var columnSpan = function(cell, worksheet) {
+var calcRowSpan = function(cell, worksheet) {
     var column = cell.charCodeAt(0) % 65;
     var row = parseInt(cell.slice(1));
     

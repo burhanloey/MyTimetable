@@ -86,7 +86,7 @@ function handleDragover(e) {
     e.dataTransfer.dropEffect = 'copy';
 }
 
-var filteredTimetable, sheetNameList;
+var filteredTimetable;
 function processWorkbook() {
     timeTable.rows.removeAll();
     
@@ -95,30 +95,34 @@ function processWorkbook() {
     filteredTimetable = {MONDAY: {}, TUESDAY: {}, WEDNESDAY: {}, THURSDAY: {}, FRIDAY: {}};
     
     /* extract information from workbook */
-    sheetNameList = ["MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY"];
-    sheetNameList.forEach(function(day) {
-        var worksheet = workbook.Sheets[day];
+    for (var attr in filteredTimetable) {
+        var worksheet = workbook.Sheets[attr];
+        var day = filteredTimetable[attr];
+        
         for (var cell in worksheet) {
             if(cell[0] === '!') continue;
-            if (regex.test(worksheet[cell].v)) {
+            
+            if (regex.test(worksheet[cell].v)) {    // if found subject
                 var rowSpanRequired = calcRowSpan(cell, worksheet);
+                var time = worksheet[cell[0] + 1].v;
+                var location = worksheet['A' + cell.slice(1)].v;
                 
-                if (!filteredTimetable[day].hasOwnProperty(worksheet[cell[0] + 1].v)) {
-                    var subjectName = worksheet[cell].v + " - " + worksheet['A' + cell.slice(1)].v; // append with location
-                    filteredTimetable[day][worksheet[cell[0] + 1].v] = {name: subjectName, rowspan: rowSpanRequired};
+                if (!day.hasOwnProperty(time)) {
+                    var subjectName = worksheet[cell].v + " - " + location;
+                    day[time] = {name: subjectName, rowspan: rowSpanRequired};
                     
                     /* fill next cells to represent merged cells */
                     var currentCell = cell.charCodeAt(0);
                     for (var i = 1; i < rowSpanRequired; i++) {
                         var nextCell = String.fromCharCode(currentCell + i);
-                        filteredTimetable[day][worksheet[nextCell + 1].v] = {name: "merged", rowspan: 1};
+                        day[worksheet[nextCell + 1].v] = {name: "merged", rowspan: 1};
                     }
                 } else {
                     $("#error").show();
                 }
             }
         }
-    });
+    }
     
     fillTimetable();
 }
@@ -136,15 +140,15 @@ function createRegex() {
     return new RegExp(regexStr);
 }
 
-var calcRowSpan = function(cell, worksheet) {
+function calcRowSpan(cell, worksheet) {
     var column = cell.charCodeAt(0) % 65;
     var row = parseInt(cell.slice(1));
     
     var ranges = worksheet['!merges'];
-    for (var i = 0; i < ranges.length; i++) {
-        var startColumn = parseInt(JSON.stringify(ranges[i].s.c));
-        var startRow = parseInt(JSON.stringify(ranges[i].s.r));
-        var endColumn = parseInt(JSON.stringify(ranges[i].e.c));
+    for (var index in ranges) {
+        var startColumn = parseInt(JSON.stringify(ranges[index].s.c));
+        var startRow = parseInt(JSON.stringify(ranges[index].s.r));
+        var endColumn = parseInt(JSON.stringify(ranges[index].e.c));
         
         if (column === startColumn && row === startRow) {
             return 1 + (endColumn - startColumn);
@@ -156,19 +160,20 @@ var calcRowSpan = function(cell, worksheet) {
 function fillTimetable() {
     for (var i = 66; i <= 78; i++) {    // from B to N
         var row = new Row();
-        var firstWorksheet = workbook.Sheets[sheetNameList[0]];
+        var firstWorksheet = workbook.Sheets["MONDAY"];
         var time = firstWorksheet[String.fromCharCode(i) + 1].v;
         row.addColumn(time, 1, true);
         
-        sheetNameList.forEach(function(day) {
-            if (filteredTimetable[day].hasOwnProperty(time)) {
-                if (filteredTimetable[day][time].name !== "merged") {
-                    row.addColumn(filteredTimetable[day][time].name, filteredTimetable[day][time].rowspan, false);
+        for (var attr in filteredTimetable) {
+            var day = filteredTimetable[attr];
+            if (day.hasOwnProperty(time)) {
+                if (day[time].name !== "merged") {
+                    row.addColumn(day[time].name, day[time].rowspan, false);
                 }
             } else {
                 row.addColumn("", 1, false);
             }
-        });
+        }
         
         timeTable.addRow(row);
     }

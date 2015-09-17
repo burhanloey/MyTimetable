@@ -31,7 +31,7 @@ function TimetableViewModel() {
     var self = this;
     
     self.subjects = ko.observableArray([
-        new Subject("G4.*WXES1116"),
+        new Subject("G4 WXES1116"),
         new Subject("WMES3302"),
         new Subject("GREK1007")
     ]);
@@ -121,19 +121,18 @@ function processWorkbook() {
     });
     
     fillTimetable();
-    
-    var output = JSON.stringify(to_json(workbook), 2, 2);
-    document.getElementById('output').innerHTML = output;
 }
 
 function createRegex() {
     var regexStr = "";
-    for (var i = 0; i < timeTable.subjects().length; i++) {
-        if (i !== 0) {
-            regexStr += "|";
-        }
-        regexStr += timeTable.subjects()[i].name();
-    }
+    timeTable.subjects().forEach(function(subject, index) {
+        if (index !== 0) regexStr += "|";
+        
+        var tokens = subject.name().split(" ");
+        tokens.forEach(function(token) {
+            regexStr += "(?=.*" + token + ")";
+        });
+    });
     return new RegExp(regexStr);
 }
 
@@ -173,17 +172,6 @@ function fillTimetable() {
         
         timeTable.addRow(row);
     }
-}
-
-function to_json(workbook) {
-    var result = {};
-    workbook.SheetNames.forEach(function(sheetName) {
-        var roa = XLSX.utils.sheet_to_row_object_array(workbook.Sheets[sheetName]);
-        if(roa.length > 0){
-            result[sheetName] = roa;
-        }
-    });
-    return result;
 }
 
 var drop = document.getElementById('drop');

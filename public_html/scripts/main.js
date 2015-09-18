@@ -30,11 +30,7 @@ function Column(subjectName, rowSpan, isTime) {
 function TimetableViewModel() {
     var self = this;
     
-    self.subjects = ko.observableArray([
-        new Subject("G4 WXES1116"),
-        new Subject("WMES3302"),
-        new Subject("GREK1007")
-    ]);
+    self.subjects = ko.observableArray([]);
     self.rows = ko.observableArray([]);
     
     self.addRow = function(row) {
@@ -51,6 +47,7 @@ function TimetableViewModel() {
     
     self.refresh = function() {
         $("#error").hide();
+        saveSubjects();
         processWorkbook(workbook);
     };
 }
@@ -88,6 +85,8 @@ function handleDragover(e) {
 
 var filteredTimetable;
 function processWorkbook() {
+    if (workbook === undefined) return;
+    
     timeTable.rows.removeAll();
     
     var regex = createRegex();
@@ -178,6 +177,25 @@ function fillTimetable() {
         timeTable.addRow(row);
     }
 }
+
+function saveSubjects() {
+    var subjectList = "";
+    timeTable.subjects().forEach(function(subject, index) {
+        if (index !== 0) subjectList += ",";
+        subjectList += subject.name();
+    });
+    localStorage.setItem("subjects", subjectList);
+}
+
+(function loadSubjects() {
+    var subjectList = localStorage.getItem("subjects");
+    if (subjectList === null) return;
+    
+    var subjects = subjectList.split(",");
+    subjects.forEach(function(subject) {
+        timeTable.subjects.push(new Subject(subject));
+    });
+})();
 
 var drop = document.getElementById('drop');
 drop.addEventListener('dragenter', handleDragover, false);

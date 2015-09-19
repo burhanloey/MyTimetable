@@ -38,7 +38,7 @@ function TimetableViewModel() {
     };
     
     self.addSubject = function() {
-        self.subjects.push(new Subject());
+        self.subjects.push(new Subject(""));
     };
     
     self.removeSubject = function(subject) {
@@ -102,6 +102,8 @@ function processWorkbook() {
             if(cell[0] === '!') continue;
             
             if (regex.test(worksheet[cell].v)) {    // if found subject
+                if (worksheet['A' + cell.slice(1)] === undefined) continue;
+                
                 var rowSpanRequired = calcRowSpan(cell, worksheet);
                 var time = worksheet[cell[0] + 1].v;
                 var location = worksheet['A' + cell.slice(1)].v;
@@ -127,15 +129,16 @@ function processWorkbook() {
 }
 
 function createRegex() {
-    var regexStr = "";
-    timeTable.subjects().forEach(function(subject, index) {
-        if (index !== 0) regexStr += "|";
-        
-        var tokens = subject.name().split(" ");
-        tokens.forEach(function(token) {
-            regexStr += "(?=.*" + token + ")";
-        });
-    });
+    var regexStr = timeTable.subjects()
+            .map(function(subject) {
+                return subject.name().split(" ").reduce(function(subject, token) {
+                    return (token.length > 0) ? subject + "(?=.*" + token + ")" : subject;
+                }, "");
+            })
+            .reduce(function(regex, subject) {
+                return (subject.length > 0) ? regex + "|" + subject : regex;
+            });
+    
     return new RegExp(regexStr);
 }
 
@@ -179,11 +182,14 @@ function fillTimetable() {
 }
 
 function saveSubjects() {
-    var subjectList = "";
-    timeTable.subjects().forEach(function(subject, index) {
-        if (index !== 0) subjectList += ",";
-        subjectList += subject.name();
-    });
+    var subjectList = timeTable.subjects()
+            .map(function(subject) {
+                return subject.name();
+            })
+            .reduce(function(list, subject) {
+                return list + "," + subject;
+            });
+    
     localStorage.setItem("subjects", subjectList);
 }
 

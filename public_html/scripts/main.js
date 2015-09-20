@@ -43,6 +43,7 @@ function TimetableViewModel() {
     
     self.removeSubject = function(subject) {
         self.subjects.remove(subject);
+        saveSubjects();
     };
     
     self.refresh = function() {
@@ -211,6 +212,9 @@ function fillTimetable() {
 
 function saveSubjects() {
     var subjectList = timeTable.subjects()
+            .filter(function(subject) {
+                return subject.name().length > 0;
+            })
             .map(function(subject) {
                 return subject.name();
             })

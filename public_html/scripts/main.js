@@ -55,8 +55,34 @@ function TimetableViewModel() {
 var timeTable = new TimetableViewModel();
 ko.applyBindings(timeTable);
 
-/* set up drag-and-drop event */
 var workbook;
+
+/* set up XMLHttpRequest */
+(function loadWorkbook() {
+    var url = "timetable/Jadual Waktu bagi Semester I Sesi 2015.2016.xlsx";   // url to file location in server
+    var oReq = new XMLHttpRequest();
+    oReq.open("GET", url, true);
+    oReq.responseType = "arraybuffer";
+
+    oReq.onload = function(e) {
+        var arraybuffer = oReq.response;
+
+        /* convert data to binary string */
+        var data = new Uint8Array(arraybuffer);
+        var arr = new Array();
+        for(var i = 0; i !== data.length; ++i) arr[i] = String.fromCharCode(data[i]);
+        var bstr = arr.join("");
+
+        /* Call XLSX */
+        workbook = XLSX.read(bstr, {type:"binary"});
+
+        processWorkbook();
+    };
+
+    oReq.send();
+})();
+
+/* set up drag-and-drop event */
 function handleDrop(e) {
     e.stopPropagation();
     e.preventDefault();
@@ -131,9 +157,11 @@ function processWorkbook() {
 function createRegex() {
     var regexStr = timeTable.subjects()
             .map(function(subject) {
-                return subject.name().split(" ").reduce(function(subject, token) {
-                    return (token.length > 0) ? subject + "(?=.*" + token + ")" : subject;
-                }, "");
+                return subject.name()
+                    .split(" ")
+                    .reduce(function(subject, token) {
+                        return (token.length > 0) ? subject + "(?=.*" + token + ")" : subject;
+                    }, "");
             })
             .reduce(function(regex, subject) {
                 return (subject.length > 0) ? regex + "|" + subject : regex;

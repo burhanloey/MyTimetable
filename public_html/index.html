@@ -14,10 +14,10 @@
                 <div class="col-md-3">
                     <h1>Today</h1>
                     <h3>Now</h3>
-                    <p id="now">(K) (G4) WIX1002/WXES1116 - AAS - MM6</p>
+                    <p id="now" data-bind="text: currentClass"></p>
                     <h3>Next</h3>
-                    <p id="next">(K) WMES3302 - TH - BT4</p>
-                    <p id="time" data-bind="text: timeLeft"></p>
+                    <p id="next" data-bind="text: nextClass"></p>
+                    <p id="time" data-bind="text: currentTime"></p>
                     <h3>My Subjects</h3>
                     <ul class="list-group" data-bind="foreach: subjects">
                         <li class="list-group-item">

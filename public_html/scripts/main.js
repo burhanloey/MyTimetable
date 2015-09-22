@@ -32,10 +32,13 @@ function TimetableViewModel() {
     
     self.subjects = ko.observableArray([]);
     self.rows = ko.observableArray([]);
-    self.timeLeft = ko.observable(new Date().getSeconds());
+    self.currentTime = ko.observable(new Date());
+    self.currentClass = ko.observable();
+    self.nextClass = ko.observable();
     
     self.tick = function() {
-        self.timeLeft(new Date().getSeconds());
+        self.currentTime(new Date());
+        self.checkCurrentClass();
     };
     setInterval(self.tick, 1000);
     
@@ -56,6 +59,40 @@ function TimetableViewModel() {
         $("#error").hide();
         saveSubjects();
         processWorkbook(workbook);
+    };
+    
+    self.checkCurrentClass = function() {
+        if (filteredTimetable === undefined) return;
+        
+        var currentDay = nameOfDay(self.currentTime().getDay());
+        var hourNo = self.currentTime().getHours();
+        var currentHour = hourOfDay(hourNo);
+        
+        if (filteredTimetable.hasOwnProperty(currentDay)) {
+            var day = filteredTimetable[currentDay];
+            if (day.hasOwnProperty(currentHour)) {
+                self.currentClass(day[currentHour].name);
+            } else {
+                self.currentClass("No class for now");
+            }
+            self.checkNextClass(day, hourNo);
+        } else {
+            self.currentClass("No class for now");
+        }
+    };
+    
+    self.checkNextClass = function(day, initialHour) {
+        for (var i = initialHour + 1; i <= 20; i++) {   // check until 8.00pm
+            var nextHour = hourOfDay(i);
+            if (day.hasOwnProperty(nextHour)) {
+                if (!/!merged/.test(day[nextHour].name)) {  // if cell does not contains word "!merged"
+                    self.nextClass(day[nextHour].name);
+                    break;
+                }
+            } else {
+                self.nextClass("No class after this");
+            }
+        }
     };
 }
 
@@ -149,7 +186,7 @@ function processWorkbook() {
                     var currentCell = cell.charCodeAt(0);
                     for (var i = 1; i < rowSpanRequired; i++) {
                         var nextCell = String.fromCharCode(currentCell + i);
-                        day[worksheet[nextCell + 1].v] = {name: "merged", rowspan: 1};
+                        day[worksheet[nextCell + 1].v] = {name: "!merged" + subjectName, rowspan: 1};
                     }
                 } else {
                     $("#error").show();
@@ -204,7 +241,7 @@ function fillTimetable() {
         for (var attr in filteredTimetable) {
             var day = filteredTimetable[attr];
             if (day.hasOwnProperty(time)) {
-                if (day[time].name !== "merged") {
+                if (!/!merged/.test(day[time].name)) {   // if cell does not contains word "!merged"
                     row.addColumn(day[time].name, day[time].rowspan, false);
                 }
             } else {
@@ -240,6 +277,23 @@ function saveSubjects() {
         timeTable.subjects.push(new Subject(subject));
     });
 })();
+
+function nameOfDay(dayNo) {
+    switch (dayNo) {
+        case 0: return "SUNDAY";
+        case 1: return "MONDAY";
+        case 2: return "TUESDAY";
+        case 3: return "WEDNESDAY";
+        case 4: return "THURSDAY";
+        case 5: return "FRIDAY";
+        case 6: return "SATURDAY";
+        default: return "MAYDAY MAYDAY";
+    }
+}
+
+function hourOfDay(hourNo) {
+    return hourNo + ".00 - " + hourNo + ".59";
+}
 
 var drop = document.getElementById('drop');
 drop.addEventListener('dragenter', handleDragover, false);

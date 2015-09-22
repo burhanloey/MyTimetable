@@ -32,6 +32,12 @@ function TimetableViewModel() {
     
     self.subjects = ko.observableArray([]);
     self.rows = ko.observableArray([]);
+    self.timeLeft = ko.observable(new Date().getSeconds());
+    
+    self.tick = function() {
+        self.timeLeft(new Date().getSeconds());
+    };
+    setInterval(self.tick, 1000);
     
     self.addRow = function(row) {
         self.rows.push(row);
@@ -173,7 +179,7 @@ function createRegex() {
 
 function calcRowSpan(cell, worksheet) {
     var column = cell.charCodeAt(0) % 65;
-    var row = parseInt(cell.slice(1));
+    var row = parseInt(cell.slice(1)) - 1;
     
     var ranges = worksheet['!merges'];
     for (var index in ranges) {

@@ -32,8 +32,8 @@ function TimetableViewModel() {
     
     self.subjects = ko.observableArray([]);
     self.rows = ko.observableArray([]);
-    self.currentClass = ko.observable();
-    self.nextClass = ko.observable();
+    self.currentClass = ko.observable("No class");
+    self.nextClass = ko.observable("No class after this");
     self.timeLeft = ko.observable();
     
     self.tick = function() {
@@ -71,7 +71,11 @@ function TimetableViewModel() {
         if (filteredTimetable.hasOwnProperty(currentDay)) {
             var day = filteredTimetable[currentDay];
             if (day.hasOwnProperty(currentHour)) {
-                self.currentClass(day[currentHour].name);
+                if (/!merged/.test(day[currentHour].name)) {    // if cell contains word "!merged"
+                    self.currentClass(day[currentHour].name.slice("!merged".length));
+                } else {
+                    self.currentClass(day[currentHour].name);
+                }
             } else {
                 self.currentClass("No class");
             }

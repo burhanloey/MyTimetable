@@ -1,4 +1,4 @@
-/* global XLSX, ko */
+/* global XLSX, ko, moment */
 
 function Subject(name) {
     var self = this;
@@ -32,12 +32,11 @@ function TimetableViewModel() {
     
     self.subjects = ko.observableArray([]);
     self.rows = ko.observableArray([]);
-    self.currentTime = ko.observable(new Date());
     self.currentClass = ko.observable();
     self.nextClass = ko.observable();
+    self.timeLeft = ko.observable();
     
     self.tick = function() {
-        self.currentTime(new Date());
         self.checkCurrentClass();
     };
     setInterval(self.tick, 1000);
@@ -64,8 +63,9 @@ function TimetableViewModel() {
     self.checkCurrentClass = function() {
         if (filteredTimetable === undefined) return;
         
-        var currentDay = nameOfDay(self.currentTime().getDay());
-        var hourNo = self.currentTime().getHours();
+        var currentTime = new Date();
+        var currentDay = nameOfDay(currentTime.getDay());
+        var hourNo = currentTime.getHours();
         var currentHour = hourOfDay(hourNo);
         
         if (filteredTimetable.hasOwnProperty(currentDay)) {
@@ -82,17 +82,28 @@ function TimetableViewModel() {
     };
     
     self.checkNextClass = function(day, initialHour) {
-        for (var i = initialHour + 1; i <= 20; i++) {   // check until 8.00pm
-            var nextHour = hourOfDay(i);
+        for (var hour = initialHour + 1; hour <= 20; hour++) {   // check until 8.00pm
+            var nextHour = hourOfDay(hour);
             if (day.hasOwnProperty(nextHour)) {
                 if (!/!merged/.test(day[nextHour].name)) {  // if cell does not contains word "!merged"
                     self.nextClass(day[nextHour].name);
+                    self.checkTimeLeft(hour);
                     break;
                 }
             } else {
                 self.nextClass("No class after this");
+                self.timeLeft("");
             }
         }
+    };
+    
+    self.checkTimeLeft = function(hour) {
+        var now = moment();
+        var next = moment().hours(hour).startOf('hour');
+        var difference = moment.duration(next.diff(now));
+        self.timeLeft("in " + difference.hours() + " hours, " + 
+                difference.minutes() + " minutes, " + 
+                difference.seconds() + " seconds");
     };
 }
 

@@ -12,46 +12,55 @@
         <div class="container-fluid">
             <div class="row">
                 <div class="col-md-3">
-                    <h1>Today</h1>
-                    <h3>Now</h3>
-                    <p id="now" data-bind="text: currentClass"></p>
-                    <h3>Next</h3>
-                    <p id="next" data-bind="text: nextClass"></p>
-                    <p id="timeleft" data-bind="text: timeLeft"></p>
-                    <h3>My Subjects</h3>
-                    <ul class="list-group" data-bind="foreach: subjects">
-                        <li class="list-group-item">
-                            <div class="input-group">
-                                <input class="form-control" id="inputdefault" data-bind="value: name" /> 
-                                <span class="input-group-btn">
-                                    <button class="btn btn-default" type="button" data-bind="click: $root.removeSubject"><span class="glyphicon glyphicon-remove"></span></button>
-                                </span>
-                            </div>
-                        </li>
-                    </ul>
-                    <button class="btn btn-primary" data-bind="click: addSubject"><span class="glyphicon glyphicon-plus-sign"></span> Add Subject</button>
-                    <button class="btn btn-primary" data-bind="click: refresh"><span class="glyphicon glyphicon-refresh"></span> Refresh</button>
+                    <div class="box">
+                        <h1>Today</h1>
+                        <h3>Now</h3>
+                        <p id="now" data-bind="text: currentClass"></p>
+                        <h3>Next</h3>
+                        <p id="next" data-bind="text: nextClass"></p>
+                        <p id="timeleft" data-bind="text: timeLeft"></p>
+                    </div>
+                    
+                    <div class="box">
+                        <h3>My Subjects</h3>
+                        <ul class="list-group" data-bind="foreach: subjects">
+                            <li class="list-group-item">
+                                <div class="input-group">
+                                    <input class="form-control" id="inputdefault" data-bind="value: name" /> 
+                                    <span class="input-group-btn">
+                                        <button class="btn btn-default" type="button" data-bind="click: $root.removeSubject"><span class="glyphicon glyphicon-remove"></span></button>
+                                    </span>
+                                </div>
+                            </li>
+                        </ul>
+                        <div id="my-subjects-button">
+                            <button class="btn btn-primary" data-bind="click: refresh">Refresh <span class="glyphicon glyphicon-refresh"></span></button>
+                            <button class="btn btn-primary" data-bind="click: addSubject">Add Subject <span class="glyphicon glyphicon-plus-sign"></span></button>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="col-md-9">
-                    <div id="error" class="alert alert-warning">
-                        <strong>Warning!</strong> Some of the classes are clashing, or maybe you did not specify a group for certain classes.
-                    </div>
-                    
-                    <div class="table-responsive">
-                        <table class="table table-bordered table-condensed">
-                            <thead>
-                                <tr>
-                                    <th></th><th>Monday</th><th>Tuesday</th>
-                                    <th>Wednesday</th><th>Thursday</th><th>Friday</th>
-                                </tr>
-                            </thead>
-                            <tbody data-bind="foreach: rows">
-                                <tr data-bind="foreach: columns">
-                                    <td data-bind="text: subjectName, attr: { rowspan: rowSpan }, style: { background: highlight() ? '#00A27C' : 'white', color: highlight() ? 'white' : 'black' }"></td>
-                                </tr>
-                            </tbody>
-                        </table>
+                    <div class="box">
+                        <div id="error" class="alert alert-warning">
+                            <strong>Warning!</strong> Some of the classes are clashing, or maybe you did not specify a group for certain classes.
+                        </div>
+
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-condensed">
+                                <thead>
+                                    <tr>
+                                        <th></th><th>Monday</th><th>Tuesday</th>
+                                        <th>Wednesday</th><th>Thursday</th><th>Friday</th>
+                                    </tr>
+                                </thead>
+                                <tbody data-bind="foreach: rows">
+                                    <tr data-bind="foreach: columns">
+                                        <td data-bind="text: subjectName, attr: { rowspan: rowSpan }, style: { background: highlight() ? '#00A27C' : 'white', color: highlight() ? 'white' : 'black' }"></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
             </div>

@@ -73,11 +73,11 @@ function TimetableViewModel() {
             if (day.hasOwnProperty(currentHour)) {
                 self.currentClass(day[currentHour].name);
             } else {
-                self.currentClass("No class for now");
+                self.currentClass("No class");
             }
             self.checkNextClass(day, hourNo);
         } else {
-            self.currentClass("No class for now");
+            self.currentClass("No class");
         }
     };
     

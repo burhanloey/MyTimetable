@@ -42,6 +42,15 @@ h3 {
     margin-bottom: 15px;
 }
 
+#my-subjects-icon {
+    padding-right: 15px;
+    float: right;
+}
+
+#my-subjects-body {
+    display: none;
+}
+
 #my-subjects-button {
     direction: rtl;
     padding-right: 15px;

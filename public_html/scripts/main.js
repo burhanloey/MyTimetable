@@ -137,7 +137,7 @@ var workbook;
 
         processWorkbook();
         
-        $('#loading').fadeOut('fast');
+        $('#loading').fadeOut();
     };
 
     oReq.send();
@@ -272,15 +272,9 @@ function fillTimetable() {
 
 function saveSubjects() {
     var subjectList = timeTable.subjects()
-            .filter(function(subject) {
-                return subject.name().length > 0;
-            })
-            .map(function(subject) {
-                return subject.name();
-            })
-            .reduce(function(list, subject) {
-                return list + "," + subject;
-            });
+            .filter(function(subject) { return subject.name().length > 0; })
+            .map(function(subject) { return subject.name(); })
+            .reduce(function(list, subject) { return list + "," + subject; });
     
     localStorage.setItem("subjects", subjectList);
 }
@@ -311,6 +305,12 @@ function nameOfDay(dayNo) {
 function hourOfDay(hourNo) {
     return hourNo + ".00 - " + hourNo + ".59";
 }
+
+$('#my-subjects-header').click(function() {
+    $('#my-subjects-icon').toggleClass("glyphicon-menu-right");
+    $('#my-subjects-icon').toggleClass("glyphicon-menu-down");
+    $('#my-subjects-body').fadeToggle();
+});
 
 var drop = document.getElementById('drop');
 drop.addEventListener('dragenter', handleDragover, false);

@@ -27,20 +27,24 @@
                     </div>
                     
                     <div class="box">
-                        <h3>My Subjects</h3>
-                        <ul class="list-group" data-bind="foreach: subjects">
-                            <li class="list-group-item">
-                                <div class="input-group">
-                                    <input class="form-control" id="inputdefault" data-bind="value: name" /> 
-                                    <span class="input-group-btn">
-                                        <button class="btn btn-default" type="button" data-bind="click: $root.removeSubject"><span class="glyphicon glyphicon-remove"></span></button>
-                                    </span>
-                                </div>
-                            </li>
-                        </ul>
-                        <div id="my-subjects-button">
-                            <button class="btn btn-primary" data-bind="click: refresh">Refresh <span class="glyphicon glyphicon-refresh"></span></button>
-                            <button class="btn btn-primary" data-bind="click: addSubject">Add Subject <span class="glyphicon glyphicon-plus-sign"></span></button>
+                        <div id="my-subjects-header">
+                            <h3>My Subjects <span id="my-subjects-icon" class="glyphicon glyphicon-menu-right"></span></h3>
+                        </div>
+                        <div id="my-subjects-body">
+                            <ul class="list-group" data-bind="foreach: subjects">
+                                <li class="list-group-item">
+                                    <div class="input-group">
+                                        <input class="form-control" id="inputdefault" data-bind="value: name" /> 
+                                        <span class="input-group-btn">
+                                            <button class="btn btn-default" type="button" data-bind="click: $root.removeSubject"><span class="glyphicon glyphicon-remove"></span></button>
+                                        </span>
+                                    </div>
+                                </li>
+                            </ul>
+                            <div id="my-subjects-button">
+                                <button class="btn btn-primary" data-bind="click: refresh">Refresh <span class="glyphicon glyphicon-refresh"></span></button>
+                                <button class="btn btn-primary" data-bind="click: addSubject">Add Subject <span class="glyphicon glyphicon-plus-sign"></span></button>
+                            </div>
                         </div>
                     </div>
                 </div>

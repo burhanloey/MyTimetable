@@ -136,6 +136,8 @@ var workbook;
         workbook = XLSX.read(bstr, {type:"binary"});
 
         processWorkbook();
+        
+        $('#loading').fadeOut('fast');
     };
 
     oReq.send();

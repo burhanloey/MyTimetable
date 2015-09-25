@@ -177,6 +177,7 @@ function processWorkbook() {
     timeTable.rows.removeAll();
     
     var regex = createRegex();
+    if (regex === undefined) return;
     
     filteredTimetable = {MONDAY: {}, TUESDAY: {}, WEDNESDAY: {}, THURSDAY: {}, FRIDAY: {}};
     
@@ -216,6 +217,8 @@ function processWorkbook() {
 }
 
 function createRegex() {
+    if (timeTable.subjects().length <= 0) return undefined;
+    
     var regexStr = timeTable.subjects()
             .map(function(subject) {
                 return subject.name()

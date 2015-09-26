@@ -274,6 +274,11 @@ function fillTimetable() {
 }
 
 function saveSubjects() {
+    if (timeTable.subjects().length <= 0) {
+        localStorage.removeItem("subjects");
+        return;
+    }
+    
     var subjectList = timeTable.subjects()
             .filter(function(subject) { return subject.name().length > 0; })
             .map(function(subject) { return subject.name(); })

@@ -2,7 +2,7 @@
 Simplified version of undergraduate class timetable for Faculty of Computer Science and Information Technology, University of Malaya.
 
 ### Instructions
-MyTimetable simplify the timetable based on the official timetable, which can be obtained from the official website.
+MyTimetable simplifies based on the official timetable, which can be obtained from the official website.
 
 There are two ways to load the original timetable file:
 

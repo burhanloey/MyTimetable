@@ -1,13 +1,69 @@
 body {
-    background: lightskyblue;
+    background: #212121;
+    margin: 0;
+    padding: 0;
+}
+
+.site-branding {
+    padding-top: 2em;
+    padding-bottom: 1em;
+    background: #212121;
+    color: white;
+    text-align: center;
+}
+
+nav {
+    background: #616161;
+}
+
+.main-menu-button {
+    display: block;
+    width: 100%;
+    text-align: left;
+    background: #616161;
+    border: none;
+    color: #bdbdbd;
+    padding: 10px 0;
+    padding-left: 7px;
+}
+
+.main-menu {
+    display: none;
+}
+
+.main-menu-button:hover {
+    background: lightslategray;
+}
+
+.main-menu .nav-pills > li > a {
+    -webkit-border-radius: 0;
+    -moz-border-radius: 0;
+    border-radius: 0;
+    color: #bdbdbd;
+    border-top: 1px solid white;
+}
+
+.main-menu .nav-pills > li > a:hover {
+    background: lightslategray;
+}
+
+.box {
+    background: #616161;
+    color: #bdbdbd;
+    padding-left: 5px;
+    padding-right: 5px;
+    padding-top: 1px;
+    padding-bottom: 10px;
+    margin: 15px auto;
 }
 
 table {
     table-layout: fixed;
+    margin: 10px 0;
 }
 
 th, td {
-    width: 150px;
+    width: 130px;
 }
 
 th {
@@ -15,43 +71,50 @@ th {
     text-align: center;
 }
 
-h1, h3, p {
+td {
+    height: 75px;
+}
+
+h3, p {
     padding-left: 15px;
+}
+
+h1 {
+    font-weight: bold;
+}
+
+h2 {
+    font-size: 1.75em;
+    font-weight: bold;
+    color: white;
+    padding-bottom: 10px;
+    border-bottom: 1px solid white;
 }
 
 h3 {
     opacity: 0.7;
 }
 
-.box {
-    background: white;
-    border: 1px solid grey;
-    padding: 5px 10px;
-    margin: 10px 0;
-    -webkit-box-shadow: 3px 3px 8px 0px rgba(50, 50, 50, 0.75);
-    -moz-box-shadow:    3px 3px 8px 0px rgba(50, 50, 50, 0.75);
-    box-shadow:         3px 3px 8px 0px rgba(50, 50, 50, 0.75);
-}
-
-.list-group,
-.list-group-item {
+.my-subjects-body .list-group-item {
     border: none;
+    padding-bottom: 0;
+    background: #616161;
 }
 
 .btn {
     margin-bottom: 15px;
 }
 
-#my-subjects-icon {
+.my-subjects-arrow {
     padding-right: 15px;
     float: right;
 }
 
-#my-subjects-body {
+.my-subjects-body {
     display: none;
 }
 
-#my-subjects-button {
+.my-subjects-button {
     direction: rtl;
     padding-right: 15px;
 }

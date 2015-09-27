@@ -10,47 +10,66 @@
         <link rel="stylesheet" href="stylesheets/style.css">
     </head>
     <body>
+        <header>
+            <div class="site-branding">
+                <h1 class="site-title">My Timetable</h1>
+            </div>
+            
+            <nav>
+                <button class="main-menu-button">Main Menu</button>
+                <div class="main-menu">
+                    <ul class="nav nav-pills nav-stacked">
+                        <li role="presentation"><a href="#">FSKTM Homepage</a></li>
+                        <li role="presentation"><a href="#">Contribute</a></li>
+                        <li role="presentation"><a href="#">About</a></li>
+                    </ul>
+                </div>
+            </nav>
+        </header>
+        
+        
+        
         <div id="loading">
             <span>Loading...</span>
         </div>
         
-        <div class="container-fluid">
-            <div class="row">
-                <div class="col-md-3">
-                    <div class="box">
-                        <h1>Today</h1>
-                        <h3>Now</h3>
-                        <p id="now" data-bind="text: currentClass"></p>
-                        <h3>Next</h3>
-                        <p id="next" data-bind="text: nextClass"></p>
-                        <p id="timeleft" data-bind="text: timeLeft"></p>
-                    </div>
-                    
-                    <div class="box">
-                        <div id="my-subjects-header">
-                            <h3>My Subjects <span id="my-subjects-icon" class="glyphicon glyphicon-menu-right"></span></h3>
+        <section>
+            <div class="container">
+                <div class="row">
+                    <div class="col-xs-12 col-md-3">
+                        <div class="green box">
+                            <h2>Today</h2>
+                            <h3>Now</h3>
+                            <p id="now" data-bind="text: currentClass"></p>
+                            <h3>Next</h3>
+                            <p id="next" data-bind="text: nextClass"></p>
+                            <p id="timeleft" data-bind="text: timeLeft"></p>
                         </div>
-                        <div id="my-subjects-body">
-                            <ul class="list-group" data-bind="foreach: subjects">
-                                <li class="list-group-item">
-                                    <div class="input-group">
-                                        <input class="form-control" id="inputdefault" data-bind="value: name" /> 
-                                        <span class="input-group-btn">
-                                            <button class="btn btn-default" type="button" data-bind="click: $root.removeSubject"><span class="glyphicon glyphicon-remove"></span></button>
-                                        </span>
-                                    </div>
-                                </li>
-                            </ul>
-                            <div id="my-subjects-button">
-                                <button class="btn btn-primary" data-bind="click: refresh">Refresh <span class="glyphicon glyphicon-refresh"></span></button>
-                                <button class="btn btn-primary" data-bind="click: addSubject">Add Subject <span class="glyphicon glyphicon-plus-sign"></span></button>
+
+                        <div class="box">
+                            <div class="my-subjects-header">
+                                <h2>My Subjects <span class="my-subjects-arrow glyphicon glyphicon-menu-right"></span></h2>
+                            </div>
+                            <div class="my-subjects-body">
+                                <ul class="list-group" data-bind="foreach: subjects">
+                                    <li class="list-group-item">
+                                        <div class="input-group">
+                                            <input class="form-control" id="inputdefault" data-bind="value: name" /> 
+                                            <span class="input-group-btn">
+                                                <button class="btn btn-default" type="button" data-bind="click: $root.removeSubject"><span class="glyphicon glyphicon-remove"></span></button>
+                                            </span>
+                                        </div>
+                                    </li>
+                                </ul>
+                                <div class="my-subjects-button">
+                                    <button class="btn btn-primary" data-bind="click: refresh">Refresh <span class="glyphicon glyphicon-refresh"></span></button>
+                                    <button class="btn btn-primary" data-bind="click: addSubject">Add Subject <span class="glyphicon glyphicon-plus-sign"></span></button>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
 
-                <div class="col-md-9">
-                    <div class="box">
+                    <div class="col-xs-12 col-md-9 visible-lg">
                         <div id="error" class="alert alert-warning">
                             <strong>Warning!</strong> Some of the classes are clashing, or maybe you did not specify a group for certain classes.
                         </div>
@@ -73,7 +92,7 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </section>
         
         <div id="drop">Drop file here</div>
         

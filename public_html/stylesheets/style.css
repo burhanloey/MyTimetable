@@ -1,30 +1,32 @@
 body {
-    background: #212121;
+    background: #e0e0e0;
     margin: 0;
     padding: 0;
 }
 
+header {
+    -webkit-box-shadow: 0px 3px 5px 3px rgba(50, 50, 50, 0.2);
+    -moz-box-shadow:    0px 3px 5px 3px rgba(50, 50, 50, 0.2);
+    box-shadow:         0px 3px 5px 3px rgba(50, 50, 50, 0.2);
+}
+
 .site-branding {
-    padding-top: 2em;
-    padding-bottom: 1em;
-    background: #212121;
+    padding: 1em;
+    background: #009688;
     color: white;
-    text-align: center;
 }
 
 nav {
-    background: #616161;
+    background: #009688;
 }
 
 .main-menu-button {
-    display: block;
-    width: 100%;
-    text-align: left;
-    background: #616161;
+    background: #009688;
     border: none;
-    color: #bdbdbd;
-    padding: 10px 0;
-    padding-left: 7px;
+    color: white;
+    font-size: 0.7em;
+    padding-bottom: 1px;
+    padding-top: 1px;
 }
 
 .main-menu {
@@ -32,29 +34,36 @@ nav {
 }
 
 .main-menu-button:hover {
-    background: lightslategray;
+    background: #00796b;
 }
 
 .main-menu .nav-pills > li > a {
     -webkit-border-radius: 0;
     -moz-border-radius: 0;
     border-radius: 0;
-    color: #bdbdbd;
+    color: white;
     border-top: 1px solid white;
 }
 
 .main-menu .nav-pills > li > a:hover {
-    background: lightslategray;
+    background: #00796b;
 }
 
 .box {
-    background: #616161;
-    color: #bdbdbd;
+    background: #26a69a;
+    color: black;
     padding-left: 5px;
     padding-right: 5px;
     padding-top: 1px;
     padding-bottom: 10px;
-    margin: 15px auto;
+    margin: 2em auto;
+    -webkit-box-shadow: 0px 3px 5px 3px rgba(50, 50, 50, 0.2);
+    -moz-box-shadow:    0px 3px 5px 3px rgba(50, 50, 50, 0.2);
+    box-shadow:         0px 3px 5px 3px rgba(50, 50, 50, 0.2);
+}
+
+.box p {
+    opacity: 0.87;
 }
 
 table {
@@ -86,19 +95,20 @@ h1 {
 h2 {
     font-size: 1.75em;
     font-weight: bold;
-    color: white;
+    color: black;
+    opacity: 0.87;
     padding-bottom: 10px;
-    border-bottom: 1px solid white;
+    border-bottom: 2px solid #cddc39;
 }
 
 h3 {
-    opacity: 0.7;
+    opacity: 0.54;
 }
 
 .my-subjects-body .list-group-item {
     border: none;
     padding-bottom: 0;
-    background: #616161;
+    background: #26a69a;
 }
 
 .btn {
@@ -138,7 +148,7 @@ h3 {
     left: 0;
     position: fixed;
     display: block;
-    background-color: lightskyblue;
+    background-color: #e0e0e0;
     z-index: 99;
     text-align: center;
     font-family: 'Lobster', cursive;

@@ -10,47 +10,53 @@
         <link rel="stylesheet" href="stylesheets/style.css">
     </head>
     <body>
-        <header>
-            <div class="site-branding">
-                <h1 class="site-title"><button class="glyphicon glyphicon-menu-hamburger main-menu-button"></button> My Timetable</h1>
-            </div>
-            
-            <nav>
-                <!--<button class="main-menu-button">Main Menu</button>-->
-                <div class="main-menu">
-                    <ul class="nav nav-pills nav-stacked">
-                        <li role="presentation"><a href="#">FSKTM Homepage</a></li>
-                        <li role="presentation"><a href="#">Contribute</a></li>
-                        <li role="presentation"><a href="#">About</a></li>
-                    </ul>
-                </div>
-            </nav>
-        </header>
-        
-        
-        
         <div id="loading">
             <span>Loading...</span>
         </div>
+        
+        <nav class="navbar navbar-default">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#main-navbar">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand" href="#">My Timetable</a>
+                </div>
+                <div class="collapse navbar-collapse" id="main-navbar">
+                    <ul class="nav navbar-nav navbar-right">
+                        <li><a href="#">FSKTM Homepage</a></li>
+                        <li><a href="#">Contribute</a></li>
+                        <li><a href="#">About</a></li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
         
         <section>
             <div class="container">
                 <div class="row">
                     <div class="col-xs-12 col-md-3">
-                        <div class="box">
-                            <h2>Today</h2>
-                            <h3>Now</h3>
-                            <p id="now" data-bind="text: currentClass"></p>
-                            <h3>Next</h3>
-                            <p id="next" data-bind="text: nextClass"></p>
-                            <p id="timeleft" data-bind="text: timeLeft"></p>
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <h3>Today</h3>
+                            </div>
+                            <div class="panel-body">
+                                <h3>Now</h3>
+                                <p id="now" data-bind="text: currentClass"></p>
+                                <h3>Next</h3>
+                                <p id="next" data-bind="text: nextClass"></p>
+                                <p id="timeleft" data-bind="text: timeLeft"></p>
+                            </div>
                         </div>
 
-                        <div class="box">
-                            <div class="my-subjects-header">
-                                <h2>My Subjects <span class="my-subjects-arrow glyphicon glyphicon-menu-right"></span></h2>
+                        <div class="panel panel-default panel-hide" id="my-subjects">
+                            <div class="panel-heading">
+                                <h3>My Subjects <span class="my-subjects-arrow glyphicon glyphicon-menu-right pull-right"></span></h3>
                             </div>
-                            <div class="my-subjects-body">
+                            <div class="panel-body collapse">
                                 <ul class="list-group" data-bind="foreach: subjects">
                                     <li class="list-group-item">
                                         <div class="input-group">
@@ -61,20 +67,20 @@
                                         </div>
                                     </li>
                                 </ul>
-                                <div class="my-subjects-button">
-                                    <button class="btn btn-primary" data-bind="click: refresh">Refresh <span class="glyphicon glyphicon-refresh"></span></button>
-                                    <button class="btn btn-primary" data-bind="click: addSubject">Add Subject <span class="glyphicon glyphicon-plus-sign"></span></button>
+                                <div class="pull-right">
+                                    <button class="btn btn-default" data-bind="click: addSubject"><span class="glyphicon glyphicon-plus-sign"></span> Add Subject</button>
+                                    <button class="btn btn-default" data-bind="click: refresh"><span class="glyphicon glyphicon-refresh"></span> Refresh</button>
                                 </div>
                             </div>
                         </div>
                     </div>
 
-                    <div class="col-xs-12 col-md-9 visible-lg">
+                    <div class="col-xs-12 col-md-9">
                         <div id="error" class="alert alert-warning">
                             <strong>Warning!</strong> Some of the classes are clashing, or maybe you did not specify a group for certain classes.
                         </div>
 
-                        <div class="table-responsive">
+                        <div class="table-responsive hidden-xs">
                             <table class="table table-bordered table-condensed">
                                 <thead>
                                     <tr>

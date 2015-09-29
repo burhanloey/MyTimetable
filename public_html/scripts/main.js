@@ -314,14 +314,10 @@ function hourOfDay(hourNo) {
     return hourNo + ".00 - " + hourNo + ".59";
 }
 
-$('.my-subjects-header').click(function() {
+$('.panel-hide > .panel-heading').click(function() {
     $('.my-subjects-arrow').toggleClass("glyphicon-menu-right");
     $('.my-subjects-arrow').toggleClass("glyphicon-menu-down");
-    $('.my-subjects-body').fadeToggle();
-});
-
-$('.main-menu-button').click(function() {
-    $('.main-menu').fadeToggle();
+    $('.panel-hide > .panel-body').collapse('toggle');
 });
 
 var drop = document.getElementById('drop');

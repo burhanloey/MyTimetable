@@ -319,6 +319,9 @@ function toggleArrow() {
 }
 $('.panel-hide > .panel-body').on('hide.bs.collapse', toggleArrow);
 $('.panel-hide > .panel-body').on('show.bs.collapse', toggleArrow);
+$('.panel-hide > .panel-body').on('shown.bs.collapse', function() {
+    $('html, body').animate({ scrollTop: $('#my-subjects').offset().top });
+});
 $('.panel-hide > .panel-heading').click(function() {
     $('.panel-hide > .panel-body').collapse('toggle');
 });

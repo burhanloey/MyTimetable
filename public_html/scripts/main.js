@@ -314,9 +314,12 @@ function hourOfDay(hourNo) {
     return hourNo + ".00 - " + hourNo + ".59";
 }
 
+function toggleArrow() {
+    $('.arrow').toggleClass("glyphicon-chevron-right glyphicon-chevron-down");
+}
+$('.panel-hide > .panel-body').on('hide.bs.collapse', toggleArrow);
+$('.panel-hide > .panel-body').on('show.bs.collapse', toggleArrow);
 $('.panel-hide > .panel-heading').click(function() {
-    $('.my-subjects-arrow').toggleClass("glyphicon-menu-right");
-    $('.my-subjects-arrow').toggleClass("glyphicon-menu-down");
     $('.panel-hide > .panel-body').collapse('toggle');
 });
 

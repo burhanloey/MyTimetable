@@ -7,7 +7,7 @@ th, td {
 }
 
 th {
-    background: #F0F0F0;
+    background: #F5F5F5;
     text-align: center;
 }
 
@@ -25,10 +25,7 @@ td {
 
 #drop {
     display: none;
-    background: lightblue;
     text-align: center;
-    padding: 1em;
-    margin-top: 5px;
 }
 
 #loading {

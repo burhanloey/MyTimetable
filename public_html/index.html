@@ -27,8 +27,8 @@
                 </div>
                 <div class="collapse navbar-collapse" id="main-navbar">
                     <ul class="nav navbar-nav navbar-right">
-                        <li><a href="#">FSKTM Homepage</a></li>
-                        <li><a href="#">Contribute</a></li>
+                        <li><a href="http://www.fsktm.um.edu.my/">FSKTM Homepage</a></li>
+                        <li><a href="https://github.com/burhanloey/MyTimetable">Contribute</a></li>
                         <li><a href="#">About</a></li>
                     </ul>
                 </div>
@@ -38,10 +38,18 @@
         <section>
             <div class="container">
                 <div class="row">
+                    <div class="col-xs-12">
+                        <div class="panel panel-default" id="drop">
+                            <div class="panel-body">
+                                Drop file here
+                            </div>
+                        </div>
+                    </div>
+                    
                     <div class="col-xs-12 col-md-3">
                         <div class="panel panel-default">
                             <div class="panel-heading">
-                                <h3>Today</h3>
+                                <h3>Today <small class="text-capitalize" data-bind="text: day"></small></h3>
                             </div>
                             <div class="panel-body">
                                 <h3>Now</h3>
@@ -99,8 +107,6 @@
                 </div>
             </div>
         </section>
-        
-        <div id="drop">Drop file here</div>
         
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.5/js/bootstrap.min.js"></script>

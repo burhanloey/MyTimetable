@@ -6,8 +6,8 @@ MyTimetable simplifies based on the official timetable, which can be obtained fr
 
 There are two ways to load the original timetable file:
 
-1. As soon as the app is loaded. You can specify which file to be loaded in ```scripts/main.js```.
-2. Drag and drop the file. This feature is disabled by default. To enable it, remove ```display: none;``` from ```#drop``` in ```stylesheets/style.css```.
+1. **As soon as the app is loaded**. You can specify which file to be loaded in ```scripts/main.js```.
+2. **Drag and drop the file**. This feature is disabled by default. To enable it, remove ```display: none;``` from ```#drop``` in ```stylesheets/style.css```.
 
 ### Libraries
 - jQuery

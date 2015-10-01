@@ -275,10 +275,12 @@ function saveSubjects() {
     var subjectList = localStorage.getItem("subjects");
     if (subjectList === null) return;
     
+    var temp = [];
     var subjects = subjectList.split(",");
     subjects.forEach(function(subject) {
-        timeTable.subjects.push(new Subject(subject));
+        temp.push(new Subject(subject));
     });
+    timeTable.subjects(temp);
 })();
 
 /* formatting hour according to the original timetable */

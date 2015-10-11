@@ -9,8 +9,11 @@ There are two ways to load the original timetable file:
 1. **As soon as the app is loaded**. You can specify which file to be loaded in ```scripts/main.js```.
 2. **Drag and drop the file**. This feature is disabled by default. To enable it, remove ```display: none;``` from ```#drop``` in ```stylesheets/style.css```.
 
+### Take caution with file name
+Depends on the operating system of the server, a file name that consists of blank space may not behave as expected. If the file is not being loaded, try removing the blank spaces from the file name.
+
 ### Deployment
-It is suggested to compress the JavaScript file before it is deployed. You can use sites like [JSCompress.com](http://jscompress.com/), or any uglifier implementation.
+It is suggested to compress the JavaScript and CSS files before they are deployed. You can use sites like [JSCompress.com](http://jscompress.com/), [CSSCompressor.com](http://csscompressor.com/), or any uglifier implementation.
 
 ### Libraries
 - jQuery

@@ -1,40 +1,43 @@
 /* global XLSX, ko, moment */
 
-var url = "timetable/Jadual Waktu bagi Semester I Sesi 2015.2016.xlsx";   // url to file location in server
+var url = "timetable/timetable.xlsx";   // url to file location in server
 var workbook;
 var filteredTimetable;
 
-/* subject model */
+/* Subject data model */
 function Subject(name) {
     var self = this;
     
     self.name = ko.observable(name);
 }
 
-/* timetable row model */
+/* Timetable row data model */
 function Row() {
     var self = this;
     
     self.columns = ko.observableArray([]);
     
+    /* Add column to the row */
     self.addColumn = function(subjectName, rowSpan, isTime) {
         self.columns.push(new Column(subjectName, rowSpan, isTime));
     };
 }
 
-/* timetable column model */
+/* Timetable column data model */
 function Column(subjectName, rowSpan, isTime) {
     var self = this;
     
     self.subjectName = ko.observable(subjectName);
     self.rowSpan = ko.observable(rowSpan);
     self.isTime = ko.observable(isTime);
+    
+    /* Check if the cell should be highlighted, indicating whether the cell have value */
     self.highlight = ko.computed(function() {
         return self.subjectName().length > 0 && !self.isTime();
     });
 }
 
-/* main view model */
+/* Main view model */
 function TimetableViewModel() {
     var self = this;
     
@@ -45,31 +48,37 @@ function TimetableViewModel() {
     self.nextClass = ko.observable("No class after this");
     self.timeLeft = ko.observable();
     
+    /* Run a timer that check current class for each interval */
     self.tick = function() {
         self.day(moment().format("dddd"));
         self.checkCurrentClass();
     };
-    setInterval(self.tick, 1000);
+    setInterval(self.tick, 1000);   // ms
     
+    /* Add row to the table */
     self.addRow = function(row) {
         self.rows.push(row);
     };
     
+    /* Add subject to subject list */
     self.addSubject = function() {
         self.subjects.push(new Subject(""));
     };
     
+    /* Remove subject from subject list */
     self.removeSubject = function(subject) {
         self.subjects.remove(subject);
-        saveSubjects();
+        saveSubjects(); // remove from localStorage also
     };
     
+    /* Refresh timetable */
     self.refresh = function() {
         $("#error").hide();
         saveSubjects();
         processWorkbook(workbook);
     };
     
+    /* Check current class */
     self.checkCurrentClass = function() {
         if (filteredTimetable === undefined) return;
         
@@ -81,7 +90,7 @@ function TimetableViewModel() {
             var day = filteredTimetable[today];
             if (day.hasOwnProperty(currentHour)) {
                 if (/!merged/.test(day[currentHour].name)) {    // if cell contains word "!merged"
-                    self.currentClass(day[currentHour].name.slice("!merged".length));
+                    self.currentClass(day[currentHour].name.slice("!merged".length));   // remove "!merged"
                 } else {
                     self.currentClass(day[currentHour].name);
                 }
@@ -94,6 +103,7 @@ function TimetableViewModel() {
         }
     };
     
+    /* Check next class */
     self.checkNextClass = function(day, initialHour) {
         for (var hour = initialHour + 1; hour <= 20; hour++) {   // check until 8.00pm
             var nextHour = hourOfDay(hour);
@@ -110,6 +120,7 @@ function TimetableViewModel() {
         }
     };
     
+    /* Check time left for next class */
     self.checkTimeLeft = function(hour) {
         var now = moment();
         var next = moment().hours(hour).startOf('hour');
@@ -120,19 +131,20 @@ function TimetableViewModel() {
     };
 }
 
+/* Apply KnockoutJS bindings */
 var timeTable = new TimetableViewModel();
 ko.applyBindings(timeTable);
 
-/* set up XMLHttpRequest */
+/* Set up XMLHttpRequest */
 (function loadWorkbook() {
     var oReq = new XMLHttpRequest();
-    oReq.open("GET", url, true);
+    oReq.open("GET", url, true);    // timetable url
     oReq.responseType = "arraybuffer";
 
     oReq.onload = function(e) {
         var arraybuffer = oReq.response;
 
-        /* convert data to binary string */
+        /* Convert data to binary string */
         var data = new Uint8Array(arraybuffer);
         var arr = new Array();
         for(var i = 0; i !== data.length; ++i) arr[i] = String.fromCharCode(data[i]);
@@ -143,13 +155,13 @@ ko.applyBindings(timeTable);
 
         processWorkbook();
         
-        $('#loading').fadeOut();
+        $('#loading').fadeOut();    // fade out loading screen after timetable is loaded
     };
 
     oReq.send();
 })();
 
-/* process workbook and stores data in filteredTimetable */
+/* Process workbook and stores data in filteredTimetable */
 function processWorkbook() {
     if (workbook === undefined) return;
     
@@ -160,33 +172,33 @@ function processWorkbook() {
     
     filteredTimetable = {MONDAY: {}, TUESDAY: {}, WEDNESDAY: {}, THURSDAY: {}, FRIDAY: {}};
     
-    /* extract information from workbook */
+    /* Extract information from workbook and store in filteredTimetable */
     for (var attr in filteredTimetable) {
         var worksheet = workbook.Sheets[attr];
         var day = filteredTimetable[attr];
         
         for (var cell in worksheet) {
-            if(cell[0] === '!') continue;
+            if(cell[0] === '!') continue;   // if value is not a cell address
             
             if (regex.test(worksheet[cell].v)) {    // if found subject
-                if (worksheet['A' + cell.slice(1)] === undefined) continue;
+                if (worksheet['A' + cell.slice(1)] === undefined) continue; // if class location is undefined
                 
                 var rowSpanRequired = calcSpan(cell, worksheet);
                 var time = worksheet[cell[0] + 1].v;
                 var location = worksheet['A' + cell.slice(1)].v;
                 
                 if (!day.hasOwnProperty(time)) {
-                    var subjectName = worksheet[cell].v + " - " + location;
+                    var subjectName = worksheet[cell].v + " - " + location; // append class location
                     day[time] = {name: subjectName, rowspan: rowSpanRequired};
                     
-                    /* fill next cells to represent merged cells */
+                    /* Fill next cells to represent merged cells */
                     var currentCell = cell.charCodeAt(0);
                     for (var i = 1; i < rowSpanRequired; i++) {
                         var nextCell = String.fromCharCode(currentCell + i);
                         day[worksheet[nextCell + 1].v] = {name: "!merged" + subjectName, rowspan: 1};
                     }
                 } else {
-                    $("#error").show();
+                    $("#error").show(); // show error message if there is a time clash
                 }
             }
         }
@@ -195,10 +207,16 @@ function processWorkbook() {
     fillTimetable();
 }
 
-/* create regex from subjects list */
+/* Create regex from subjects list */
 function createRegex() {
-    if (timeTable.subjects().length <= 0) return undefined;
+    if (timeTable.subjects().length <= 0) return undefined; // if no subjects
     
+    /**
+     * Tokenize each subjects(for class group), then wrap it with '(?=.*' and ')'.
+     * The wrapped strings are then merged with delimiter '|'.
+     * 
+     * For example: [WIX1002 G4, WIA1001] will become (?=.*WIX1002)(?=.*G4)|(?=.*WIA1001)
+     */
     var regexStr = timeTable.subjects()
             .map(function(subject) {
                 return subject.name()
@@ -214,9 +232,9 @@ function createRegex() {
     return new RegExp(regexStr);
 }
 
-/* calculate span for cell */
+/* Calculate span for cell */
 function calcSpan(cell, worksheet) {
-    var column = cell.charCodeAt(0) % 65;
+    var column = cell.charCodeAt(0) % 65;   // change A to 0, B to 1, and so on...
     var row = parseInt(cell.slice(1)) - 1;
     
     var ranges = worksheet['!merges'];
@@ -232,7 +250,7 @@ function calcSpan(cell, worksheet) {
     return 1;
 };
 
-/* fill timetable from filteredTimetable */
+/* Fill timetable from filteredTimetable */
 function fillTimetable() {
     for (var i = 66; i <= 78; i++) {    // from B to N
         var row = new Row();
@@ -247,7 +265,7 @@ function fillTimetable() {
                     row.addColumn(day[time].name, day[time].rowspan, false);
                 }
             } else {
-                row.addColumn("", 1, false);
+                row.addColumn("", 1, false);    // add empty cell if no value
             }
         }
         
@@ -255,13 +273,14 @@ function fillTimetable() {
     }
 }
 
-/* save subjects list in localStorage */
+/* Save subjects list in localStorage */
 function saveSubjects() {
-    if (timeTable.subjects().length <= 0) {
+    if (timeTable.subjects().length <= 0) { // if no subjects
         localStorage.removeItem("subjects");
         return;
     }
     
+    /* Merges subjects name with comma delimiter ',' */
     var subjectList = timeTable.subjects()
             .filter(function(subject) { return subject.name().length > 0; })
             .map(function(subject) { return subject.name(); })
@@ -270,7 +289,7 @@ function saveSubjects() {
     localStorage.setItem("subjects", subjectList);
 }
 
-/* load subjects list from localStorage */
+/* Load subjects list from localStorage */
 (function loadSubjects() {
     var subjectList = localStorage.getItem("subjects");
     if (subjectList === null) return;
@@ -283,25 +302,29 @@ function saveSubjects() {
     timeTable.subjects(temp);
 })();
 
-/* formatting hour according to the original timetable */
+/* Formatting hour according to the original timetable */
 function hourOfDay(hourNo) {
     return hourNo + ".00 - " + hourNo + ".59";
 }
 
-/* set up panel-hide events */
+/* Toggle chevron arrow on hide and show */
 function toggleArrow() {
     $('.arrow').toggleClass("glyphicon-chevron-right glyphicon-chevron-down");
 }
 $('.panel-hide > .panel-body').on('hide.bs.collapse', toggleArrow);
 $('.panel-hide > .panel-body').on('show.bs.collapse', toggleArrow);
+
+/* Scroll website to My Subjects section after the list is shown */
 $('.panel-hide > .panel-body').on('shown.bs.collapse', function() {
     $('html, body').animate({ scrollTop: $('#my-subjects').offset().top });
 });
+
+/* Toggle visibility of panel-hide body */
 $('.panel-hide > .panel-heading').click(function() {
     $('.panel-hide > .panel-body').collapse('toggle');
 });
 
-/* set up drag-and-drop event */
+/* Set up drag-and-drop event */
 function handleDrop(e) {
     e.stopPropagation();
     e.preventDefault();
@@ -313,7 +336,7 @@ function handleDrop(e) {
         reader.onload = function(e) {
             var data = e.target.result;
 
-            /* if binary string, read with type 'binary' */
+            /* If binary string, read with type 'binary' */
             workbook = XLSX.read(data, {type: 'binary'});
 
             processWorkbook();

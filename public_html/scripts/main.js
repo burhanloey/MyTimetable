@@ -250,7 +250,7 @@ function calcSpan(cell, worksheet) {
     return 1;
 };
 
-/* Fill timetable from filteredTimetable */
+/* Fill timetable with filteredTimetable */
 function fillTimetable() {
     for (var i = 66; i <= 78; i++) {    // from B to N
         var row = new Row();
@@ -316,7 +316,7 @@ $('.panel-hide > .panel-body').on('show.bs.collapse', toggleArrow);
 
 /* Scroll website to My Subjects section after the list is shown */
 $('.panel-hide > .panel-body').on('shown.bs.collapse', function() {
-    $('html, body').animate({ scrollTop: $('#my-subjects').offset().top });
+    $('html, body').animate({ scrollTop: $('#my-subjects-panel').offset().top });
 });
 
 /* Toggle visibility of panel-hide body */

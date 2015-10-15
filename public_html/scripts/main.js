@@ -89,8 +89,10 @@ function TimetableViewModel() {
         if (filteredTimetable.hasOwnProperty(today)) {
             var day = filteredTimetable[today];
             if (day.hasOwnProperty(currentHour)) {
-                if (/!merged/.test(day[currentHour].name)) {    // if cell contains word "!merged"
-                    self.currentClass(day[currentHour].name.slice("!merged".length));   // remove "!merged"
+                // if cell contains word "!merged"
+                if (/!merged/.test(day[currentHour].name)) {
+                    // remove "!merged", leaving only the class name
+                    self.currentClass(day[currentHour].name.slice("!merged".length));
                 } else {
                     self.currentClass(day[currentHour].name);
                 }
@@ -108,7 +110,8 @@ function TimetableViewModel() {
         for (var hour = initialHour + 1; hour <= 20; hour++) {   // check until 8.00pm
             var nextHour = hourOfDay(hour);
             if (day.hasOwnProperty(nextHour)) {
-                if (!/!merged/.test(day[nextHour].name)) {  // if cell does not contains word "!merged"
+                // if cell does not contains word "!merged"
+                if (!/!merged/.test(day[nextHour].name)) {
                     self.nextClass(day[nextHour].name);
                     self.checkTimeLeft(hour);
                     break;
@@ -155,7 +158,8 @@ ko.applyBindings(timeTable);
 
         processWorkbook();
         
-        $('#loading').fadeOut();    // fade out loading screen after timetable is loaded
+        // fade out loading screen after timetable is loaded
+        $('#loading').fadeOut();
     };
 
     oReq.send();
@@ -178,17 +182,25 @@ function processWorkbook() {
         var day = filteredTimetable[attr];
         
         for (var cell in worksheet) {
-            if(cell[0] === '!') continue;   // if value is not a cell address
+            // if value is not a cell address
+            if(cell[0] === '!') continue;
             
-            if (regex.test(worksheet[cell].v)) {    // if found subject
-                if (worksheet['A' + cell.slice(1)] === undefined) continue; // if class location is undefined
+            // remove new line
+            var cellValue = worksheet[cell].v.split("\r\n").join(" ");
+            
+            // if found subject
+            if (regex.test(cellValue)) {
+                // if class location is undefined
+                if (worksheet['A' + cell.slice(1)] === undefined) continue;
                 
                 var rowSpanRequired = calcSpan(cell, worksheet);
                 var time = worksheet[cell[0] + 1].v;
                 var location = worksheet['A' + cell.slice(1)].v;
                 
                 if (!day.hasOwnProperty(time)) {
-                    var subjectName = worksheet[cell].v + " - " + location; // append class location
+                    // append class location
+                    var subjectName = worksheet[cell].v + " - " + location;
+                    
                     day[time] = {name: subjectName, rowspan: rowSpanRequired};
                     
                     /* Fill next cells to represent merged cells */
@@ -198,7 +210,8 @@ function processWorkbook() {
                         day[worksheet[nextCell + 1].v] = {name: "!merged" + subjectName, rowspan: 1};
                     }
                 } else {
-                    $("#error").show(); // show error message if there is a time clash
+                    // show error message if there is a time clash
+                    $("#error").show();
                 }
             }
         }
@@ -209,7 +222,8 @@ function processWorkbook() {
 
 /* Create regex from subjects list */
 function createRegex() {
-    if (timeTable.subjects().length <= 0) return undefined; // if no subjects
+    // if no subjects
+    if (timeTable.subjects().length <= 0) return undefined;
     
     /**
      * Tokenize each subjects(for class group), then wrap it with '(?=.*' and ')'.
@@ -261,11 +275,13 @@ function fillTimetable() {
         for (var attr in filteredTimetable) {
             var day = filteredTimetable[attr];
             if (day.hasOwnProperty(time)) {
-                if (!/!merged/.test(day[time].name)) {   // if cell does not contains word "!merged"
+                // if cell does not contains word "!merged"
+                if (!/!merged/.test(day[time].name)) {
                     row.addColumn(day[time].name, day[time].rowspan, false);
                 }
             } else {
-                row.addColumn("", 1, false);    // add empty cell if no value
+                // add empty cell if no value
+                row.addColumn("", 1, false);
             }
         }
         
@@ -275,7 +291,8 @@ function fillTimetable() {
 
 /* Save subjects list in localStorage */
 function saveSubjects() {
-    if (timeTable.subjects().length <= 0) { // if no subjects
+    // if no subjects
+    if (timeTable.subjects().length <= 0) {
         localStorage.removeItem("subjects");
         return;
     }

@@ -13,7 +13,7 @@ There are two ways to load the original timetable file:
 Depends on the operating system of the server, a file name that contains blank space may not behave as expected. If the file is not being loaded, try removing the blank spaces from the file name.
 
 ### Deployment
-It is suggested to compress the JavaScript and CSS files before they are deployed. You can use sites like [JSCompress.com](http://jscompress.com/), [CSSCompressor.com](http://csscompressor.com/), or any uglifier implementation.
+It is suggested to compress the JavaScript and CSS files before they are deployed. You can use tools like [Google Closure Tools](https://developers.google.com/closure/), [YUI Compressor](http://yui.github.io/yuicompressor/), or any uglifier implementation.
 
 ### Libraries
 - jQuery

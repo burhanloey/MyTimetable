@@ -29,7 +29,7 @@ function Column(subjectName, rowSpan, isTime) {
     
     self.subjectName = ko.observable(subjectName);
     self.rowSpan = ko.observable(rowSpan);
-    self.isTime = ko.observable(isTime);
+    self.isTime = ko.observable(isTime);    // will not highlight if true
     
     /* Check if the cell should be highlighted, indicating whether the cell have value */
     self.highlight = ko.computed(function() {

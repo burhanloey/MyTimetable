@@ -1,0 +1,21 @@
+application: my-timetable-demo
+version: 1
+runtime: go
+api_version: go1
+
+handlers:
+- url: /stylesheets
+  static_dir: stylesheets
+  application_readable: true
+
+- url: /scripts
+  static_dir: scripts
+  application_readable: true
+
+- url: /timetable
+  static_dir: timetable
+  application_readable: true
+  mime_type: application/octet-stream
+
+- url: /
+  script: _go_app
